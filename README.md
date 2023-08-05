@@ -1,3 +1,3 @@
 # python
 
-rank most common statements in my python scripts
+TODO 2023-08 rank most common statements in my python scripts (to maybe create flashcards from)
