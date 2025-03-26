@@ -12,3 +12,8 @@ TODO
 
 ### Career change to python
 Look for ways to contribute to open source (e.g. grcat)
+
+### 
+2025-03
+See if you can condense these "real" python programs into something compact that fit on a single page (a lot like template.git but more interesting):
+https://docs.google.com/spreadsheets/d/1xg_QHbZR0JKY1zQhgyexgtzw9mLe69F-i8Z6Q9AoHkg/edit?gid=1329018902#gid=1329018902
