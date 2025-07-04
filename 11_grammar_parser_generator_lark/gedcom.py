@@ -62,6 +62,9 @@ class GEDCOMTransformer(Transformer):
             "children": subrecords
         }
 
+print("Parsed\n------")
 transformer = GEDCOMTransformer()
 parsed = transformer.transform(tree)
+
 print(parsed)
+
