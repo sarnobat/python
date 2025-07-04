@@ -34,11 +34,33 @@ print(tree.pretty())
 class GEDCOMTransformer(Transformer):
     def record(self, items):
         level = items[0]
-        xref = items[1] if isinstance(items[1], Tree) and items[1].data == "xref" else None
-        tag = items[2] if xref else items[1]
-        value = items[3] if len(items) > (3 if xref else 2) else None
-        subrecords = items[(4 if xref else 3):] if len(items) > (3 if xref else 2) else []
-        return {"level": int(level.children[0]), "xref": xref, "tag": tag, "value": value, "children": subrecords}
+        
+        idx = 1
+        xref = None
+        if isinstance(items[idx], Tree) and items[idx].data == "xref":
+            xref = items[idx]
+            idx += 1
+
+        tag = items[idx]
+        idx += 1
+
+        # Check for value
+        if idx < len(items) and isinstance(items[idx], Tree) and items[idx].data != "record":
+            value = items[idx]
+            idx += 1
+        else:
+            value = None
+
+        # Remaining items are subrecords
+        subrecords = items[idx:] if idx < len(items) else []
+
+        return {
+            "level": int(level.children[0]),
+            "xref": xref.children[0] if xref else None,
+            "tag": tag.children[0],
+            "value": value.children[0] if value else None,
+            "children": subrecords
+        }
 
 transformer = GEDCOMTransformer()
 parsed = transformer.transform(tree)
