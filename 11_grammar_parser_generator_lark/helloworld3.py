@@ -16,8 +16,9 @@ sub_expr: NUMBER "-" NUMBER
 parser = Lark(grammar)
 
 def main():
-    print(parser.parse("Hello, world!"))
-    print(parser.parse("Adios, amigo!"))
+    print(parser.parse("1+1"))
+    print(parser.parse("2-1"))
+    print(parser.parse("3 - 2"))    
 
 if __name__ == '__main__':
     main()
