@@ -1,4 +1,5 @@
 from lark import Lark, Transformer
+import sys
 
 grammar = """
 start: add_expr
@@ -25,9 +26,9 @@ parser = Lark(grammar, parser='lalr',
     transformer=CalcTransformer())
 
 def main():
-    print(parser.parse("1+1"))
-    print(parser.parse("2-1"))
-    print(parser.parse("3 - 2"))
+    text = sys.stdin.read().strip()
+
+    tree = parser.parse(text)
 
 if __name__ == '__main__':
     main()
