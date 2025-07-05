@@ -23,10 +23,10 @@ HEADING2:   /== /
 DATESTAMP:  /[0-9]{4}-[0-9]{2}-[0-9]{2}/
 WILDCARD:   /.+/
 
-snippet:    HEADING3 -> snippet
-d:          DATESTAMP -> datestamp
-add_expr:   NUMBER "+" NUMBER -> add_expr
-unhandled:    WILDCARD -> unhandled
+snippet:        HEADING3 -> snippet
+d:              DATESTAMP -> datestamp
+add_expr:       NUMBER "+" NUMBER -> add_expr
+unhandled:      WILDCARD -> unhandled
 
 
 """
