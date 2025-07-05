@@ -2,9 +2,7 @@ from lark import Lark, Transformer
 import sys
 
 grammar = """
-start: d
-    | snippet
-    | unhandled
+start: line+
 
 
 %import common.WS_INLINE
@@ -14,13 +12,14 @@ start: d
 %ignore NEWLINE
 %ignore WS_INLINE
 
+line:   d
+    | snippet
+    | unhandled
 
-HEADING3:   /===/
 
+HEADING3:   /=== ===/
 HEADING2:   /== /
-
 DATESTAMP:  /[0-9]{4}-[0-9]{2}-[0-9]{2}/
-
 WILDCARD:   /.+/
 
 snippet:    HEADING3 -> snippet
@@ -28,8 +27,9 @@ snippet:    HEADING3 -> snippet
 d:          DATESTAMP -> datestamp
 
 add_expr:   NUMBER "+" NUMBER -> add_expr
-
+    
 unhandled:    WILDCARD -> unhandled
+
 
 """
 
