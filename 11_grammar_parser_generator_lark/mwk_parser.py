@@ -1,3 +1,4 @@
+# cat ~/mwk.git/apple_notes_read_only/main_iphone.mwk.becomesempty | head -100 | tail | python3 mwk_parser.py
 from lark import Lark, Transformer
 import sys
 
@@ -23,11 +24,8 @@ DATESTAMP:  /[0-9]{4}-[0-9]{2}-[0-9]{2}/
 WILDCARD:   /.+/
 
 snippet:    HEADING3 -> snippet
-
 d:          DATESTAMP -> datestamp
-
 add_expr:   NUMBER "+" NUMBER -> add_expr
-    
 unhandled:    WILDCARD -> unhandled
 
 
