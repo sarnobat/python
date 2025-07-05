@@ -11,16 +11,14 @@ start: snippet+
 
 // we can't ignore newlines, because we need to preserve the corpus newlines
 
-HEADING3:       /=== ===/
+HEADING3.2:       /=== ===/
 HEADING2:       /== /
 DATESTAMP:      /[0-9]{4}-[0-9]{2}-[0-9]{2}/
 WHITESPACE:     /\s+/
 LINE.-1:        /(.|\s)+/
 
-//HEADING3 NEWLINE LINE NEWLINE DATESTAMP NEWLINE HEADING3   -> parse_snippet
-
-snippet:        HEADING3 NEWLINE LINE NEWLINE DATESTAMP NEWLINE HEADING3   -> parse_snippet
-//                | HEADING3   -> parse_snippet
+snippet:        HEADING3 NEWLINE LINE NEWLINE DATESTAMP NEWLINE    -> parse_snippet
+                | HEADING3   -> parse_ending
 d:              DATESTAMP               -> parse_datestamp
 add_expr:       NUMBER "+" NUMBER       -> add_expr
 whitespace:     WHITESPACE              -> parse_whitespace
@@ -38,11 +36,15 @@ class CalcTransformer(Transformer):
         print("parse_unhandled(): " + args[0])
         return args[0]
 
+    def parse_ending(self, args):
+        print("parse_ending(): " + args[0])
+        return args[0]
+
     def parse_snippet(self, args):
-        print("snippet(): " + args[0])
-        print("snippet(): " + args[1])
+        print("snippet(): heading " + args[0])
+        print("snippet(): " + args[1], end="")
         print("snippet(): " + args[2])
-        print("snippet(): " + args[3])
+        print("snippet(): " + args[3], end="")
         print("snippet(): datestamp = " + args[4])
         return args[0]
 
@@ -74,7 +76,7 @@ def main():
 
     result = CalcTransformer().transform(tree)
 
-    print(result)
+    #print(result)
 
 if __name__ == '__main__':
     main()
