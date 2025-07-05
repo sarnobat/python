@@ -20,9 +20,9 @@ line: snippet
 
 HEADING3:       /=== ===/
 HEADING2:       /== /
-DATESTAMP.2:      /[0-9]{4}-[0-9]{2}-[0-9]{2}/
+DATESTAMP.2:    /[0-9]{4}-[0-9]{2}-[0-9]{2}/
 WHITESPACE:     /\s+/
-WILDCARD.1:       /.+/
+WILDCARD.1:     /.+/
 
 snippet:        HEADING3                -> parse_snippet
 d:              DATESTAMP               -> parse_datestamp
