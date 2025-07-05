@@ -5,7 +5,6 @@ import sys
 grammar = """
 start: line+
 
-
 %import common.WS_INLINE
 %import common.NUMBER
 %import common.NEWLINE
