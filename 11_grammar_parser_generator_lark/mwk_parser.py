@@ -3,31 +3,41 @@ import sys
 
 grammar = """
 start: d
+    | snippet
+    | unhandled
 
 
 %import common.WS_INLINE
 %import common.NUMBER
+%import common.NEWLINE
 
-%ignore " "
+%ignore NEWLINE
 %ignore WS_INLINE
 
-HEADING2:   /==/
 
+HEADING3:   /===/
 
+HEADING2:   /== /
 
 DATESTAMP:  /[0-9]{4}-[0-9]{2}-[0-9]{2}/
 
+WILDCARD:   /.+/
 
-snippet:    HEADING2 -> snippet
+snippet:    HEADING3 -> snippet
 
 d:          DATESTAMP -> datestamp
 
 add_expr:   NUMBER "+" NUMBER -> add_expr
 
+unhandled:    WILDCARD -> unhandled
 
 """
 
 class CalcTransformer(Transformer):
+
+    def unhandled(self, args):
+        print("unhandled()")
+        return args[0]
 
     def snippet(self, args):
         print("snippet()")
