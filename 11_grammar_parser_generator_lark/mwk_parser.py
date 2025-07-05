@@ -11,7 +11,7 @@ start: snippet+
 
 // we can't ignore newlines, because we need to preserve the corpus newlines
 
-HEADING3.2:       /=== ===/
+HEADING3.2:     /=== ===/
 HEADING2:       /== /
 DATESTAMP:      /[0-9]{4}-[0-9]{2}-[0-9]{2}/
 WHITESPACE:     /\s+/
