@@ -15,9 +15,9 @@ HEADING3.1:     /=== ===/
 HEADING2:       /== /
 DATESTAMP:      /[0-9]{4}-[0-9]{2}-[0-9]{2}/
 WHITESPACE:     /\s+/
-LINE:        /(.|\s)+/
+BODY:        /(.|\s)+/
 
-snippet:        HEADING3 NEWLINE LINE NEWLINE DATESTAMP NEWLINE    -> parse_snippet
+snippet:        HEADING3 NEWLINE BODY NEWLINE DATESTAMP NEWLINE    -> parse_snippet
                 | HEADING3   -> parse_ending
 d:              DATESTAMP               -> parse_datestamp
 add_expr:       NUMBER "+" NUMBER       -> add_expr
