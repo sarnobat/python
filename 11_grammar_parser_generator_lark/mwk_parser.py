@@ -11,11 +11,11 @@ start: snippet+
 
 // we can't ignore newlines, because we need to preserve the corpus newlines
 
-HEADING3.2:     /=== ===/
+HEADING3.1:     /=== ===/
 HEADING2:       /== /
 DATESTAMP:      /[0-9]{4}-[0-9]{2}-[0-9]{2}/
 WHITESPACE:     /\s+/
-LINE.-1:        /(.|\s)+/
+LINE:        /(.|\s)+/
 
 snippet:        HEADING3 NEWLINE LINE NEWLINE DATESTAMP NEWLINE    -> parse_snippet
                 | HEADING3   -> parse_ending
