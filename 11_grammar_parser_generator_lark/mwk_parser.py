@@ -3,7 +3,7 @@ from lark import Lark, Transformer
 import sys
 
 grammar = """
-start: line+
+start: snippet+
 
 %import common.WS_INLINE
 %import common.NUMBER
@@ -11,22 +11,17 @@ start: line+
 
 // we can't ignore newlines, because we need to preserve the corpus newlines
 
-line: snippet
-    | d
-    | unhandled
-    | whitespace
-
 HEADING3:       /=== ===/
 HEADING2:       /== /
-DATESTAMP.2:    /[0-9]{4}-[0-9]{2}-[0-9]{2}/
+DATESTAMP:      /[0-9]{4}-[0-9]{2}-[0-9]{2}/
 WHITESPACE:     /\s+/
-WILDCARD.1:     /.+/
+BODY.-1:        /(.|\s)+\s/
 
-snippet:        HEADING3                -> parse_snippet
+snippet:        HEADING3 NEWLINE BODY DATESTAMP  -> parse_snippet
+                | HEADING3   -> parse_snippet
 d:              DATESTAMP               -> parse_datestamp
 add_expr:       NUMBER "+" NUMBER       -> add_expr
 whitespace:     WHITESPACE              -> parse_whitespace
-unhandled:      WILDCARD                -> parse_unhandled
 
 """
 
@@ -42,7 +37,10 @@ class CalcTransformer(Transformer):
         return args[0]
 
     def parse_snippet(self, args):
-        print("snippet(): ")
+        print("snippet(): " + args[0])
+        print("snippet(): " + args[1])
+        print("snippet(): " + args[2])
+        print("snippet(): " + args[3])
         return args[0]
 
     def parse_datestamp(self, args):
