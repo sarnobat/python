@@ -1,4 +1,4 @@
-# cat ~/mwk.git/apple_notes_read_only/main_iphone.mwk.becomesempty | head -100 | tail | python3 mwk_parser.py
+# cat ~/mwk.git/apple_notes_read_only/main_iphone.mwk.becomesempty | head -100 | tail -18 | python3 mwk_parser.py
 from lark import Lark, Transformer
 import sys
 
