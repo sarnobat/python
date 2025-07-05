@@ -18,10 +18,10 @@ line:   d
     | unhandled
 
 
-HEADING3:   /=== ===/
-HEADING2:   /== /
-DATESTAMP:  /[0-9]{4}-[0-9]{2}-[0-9]{2}/
-WILDCARD:   /.+/
+HEADING3:       /=== ===/
+HEADING2:       /== /
+DATESTAMP:      /[0-9]{4}-[0-9]{2}-[0-9]{2}/
+WILDCARD:       /.+/
 
 snippet:        HEADING3                -> parse_snippet
 d:              DATESTAMP               -> parse_datestamp
@@ -34,15 +34,15 @@ unhandled:      WILDCARD                -> parse_unhandled
 class CalcTransformer(Transformer):
 
     def parse_unhandled(self, args):
-        print("parse_unhandled()")
+        print("parse_unhandled(): " + args[0])
         return args[0]
 
     def parse_snippet(self, args):
-        print("snippet()")
+        print("snippet(): ")
         return args[0]
 
     def parse_datestamp(self, args):
-        print("datestamp()")
+        print("datestamp(): ")
         return args[0]
 
     def add_expr(self, args):
