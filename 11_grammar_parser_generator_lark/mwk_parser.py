@@ -9,7 +9,7 @@ start: snippet+
 %import common.NUMBER
 %import common.NEWLINE
 
-// we can't ignore newlines, because we need to preserve the corpus newlines
+// we can't %ignore newlines, because we need to preserve the corpus newlines
 
 HEADING3.1:     /=== ===/
 HEADING2:       /== /
