@@ -23,25 +23,25 @@ HEADING2:   /== /
 DATESTAMP:  /[0-9]{4}-[0-9]{2}-[0-9]{2}/
 WILDCARD:   /.+/
 
-snippet:        HEADING3                -> snippet
-d:              DATESTAMP               -> datestamp
+snippet:        HEADING3                -> parse_snippet
+d:              DATESTAMP               -> parse_datestamp
 add_expr:       NUMBER "+" NUMBER       -> add_expr
-unhandled:      WILDCARD                -> unhandled
+unhandled:      WILDCARD                -> parse_unhandled
 
 
 """
 
 class CalcTransformer(Transformer):
 
-    def unhandled(self, args):
-        print("unhandled()")
+    def parse_unhandled(self, args):
+        print("parse_unhandled()")
         return args[0]
 
-    def snippet(self, args):
+    def parse_snippet(self, args):
         print("snippet()")
         return args[0]
 
-    def datestamp(self, args):
+    def parse_datestamp(self, args):
         print("datestamp()")
         return args[0]
 
