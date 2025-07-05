@@ -20,7 +20,6 @@ BODY:           /(.|\s)+/
 snippet:        HEADING3 NEWLINE BODY NEWLINE DATESTAMP NEWLINE \
                                         -> parse_snippet
                 | HEADING3              -> parse_ending
-d:              DATESTAMP               -> parse_datestamp
 add_expr:       NUMBER "+" NUMBER       -> add_expr
 whitespace:     WHITESPACE              -> parse_whitespace
 
@@ -42,15 +41,11 @@ class CalcTransformer(Transformer):
         return args[0]
 
     def parse_snippet(self, args):
-        print("snippet(): heading " + args[0])
-        print("snippet(): " + args[1], end="")
-        print("snippet(): " + args[2])
-        print("snippet(): " + args[3], end="")
+        print("snippet(): heading "     + args[0])
+        print("snippet(): "             + args[1], end="")
+        print("snippet(): "             + args[2])
+        print("snippet(): "             + args[3], end="")
         print("snippet(): datestamp = " + args[4])
-        return args[0]
-
-    def parse_datestamp(self, args):
-        print("parse_datestamp(): " + args[0])
         return args[0]
 
     def add_expr(self, args):
