@@ -19,7 +19,7 @@ LINE.-1:        /(.|\s)+/
 
 //HEADING3 NEWLINE LINE NEWLINE DATESTAMP NEWLINE HEADING3   -> parse_snippet
 
-snippet:        HEADING3 LINE+  -> parse_snippet
+snippet:        HEADING3 NEWLINE LINE NEWLINE DATESTAMP NEWLINE HEADING3   -> parse_snippet
 //                | HEADING3   -> parse_snippet
 d:              DATESTAMP               -> parse_datestamp
 add_expr:       NUMBER "+" NUMBER       -> add_expr
@@ -41,8 +41,9 @@ class CalcTransformer(Transformer):
     def parse_snippet(self, args):
         print("snippet(): " + args[0])
         print("snippet(): " + args[1])
-        # print("snippet(): " + args[2])
-        # print("snippet(): " + args[3])
+        print("snippet(): " + args[2])
+        print("snippet(): " + args[3])
+        print("snippet(): datestamp = " + args[4])
         return args[0]
 
     def parse_datestamp(self, args):
