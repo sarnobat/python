@@ -10,23 +10,24 @@ start: line+
 %import common.NUMBER
 %import common.NEWLINE
 
+// we can't ignore newlines, because we need to preserve the corpus newlines
 
-line:   d
-    | snippet
-    | whitespace
+line: snippet
+    | d
     | unhandled
+    | whitespace
 
 
 HEADING3:       /=== ===/
 HEADING2:       /== /
-DATESTAMP:      /[0-9]{4}-[0-9]{2}-[0-9]{2}/
+DATESTAMP.2:      /[0-9]{4}-[0-9]{2}-[0-9]{2}/
 WHITESPACE:     /\s+/
-WILDCARD:       /.+/
+WILDCARD.1:       /.+/
 
-whitespace:     WHITESPACE              -> parse_whitespace
 snippet:        HEADING3                -> parse_snippet
 d:              DATESTAMP               -> parse_datestamp
 add_expr:       NUMBER "+" NUMBER       -> add_expr
+whitespace:     WHITESPACE              -> parse_whitespace
 unhandled:      WILDCARD                -> parse_unhandled
 
 """
@@ -34,7 +35,8 @@ unhandled:      WILDCARD                -> parse_unhandled
 class CalcTransformer(Transformer):
 
     def parse_whitespace(self, args):
-        print("parse_whitespace(): " + args[0])
+        # print("parse_whitespace(): " + str(type(args[0])))
+        print("parse_whitespace(): " + args[0], end="")
         return args[0]
         
     def parse_unhandled(self, args):
@@ -46,7 +48,7 @@ class CalcTransformer(Transformer):
         return args[0]
 
     def parse_datestamp(self, args):
-        print("datestamp(): ")
+        print("parse_datestamp(): " + args[0])
         return args[0]
 
     def add_expr(self, args):
@@ -56,7 +58,7 @@ class CalcTransformer(Transformer):
         return int(args[0]) - int(args[1])
 
 
-parser = Lark(grammar, parser='lalr', 
+parser = Lark(grammar, parser='lalr', lexer="contextual",
     transformer=CalcTransformer())
 
 def main():
