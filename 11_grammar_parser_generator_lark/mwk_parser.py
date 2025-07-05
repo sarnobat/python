@@ -17,18 +17,15 @@ DATESTAMP:      /[0-9]{4}-[0-9]{2}-[0-9]{2}/
 WHITESPACE:     /\s+/
 BODY:           /(.|\s)+/
 
-snippet:        HEADING3 NEWLINE HASHTAGS BODY NEWLINE DATESTAMP NEWLINE \
+snippet:        HEADING3 NEWLINE BODY NEWLINE DATESTAMP NEWLINE \
                                         -> parse_snippet
                 | HEADING3              -> parse_ending
-add_expr:       NUMBER "+" NUMBER       -> add_expr
-whitespace:     WHITESPACE              -> parse_whitespace
 
 """
 
 class CalcTransformer(Transformer):
 
     def parse_whitespace    (self, args):
-        # print("parse_whitespace(): " + str(type(args[0])))
         print("parse_whitespace(): "    + args[0], end="")
         return args[0]
         
@@ -47,9 +44,6 @@ class CalcTransformer(Transformer):
         print("snippet(): "             + args[3], end="")
         print("snippet(): datestamp = " + args[4])
         return args[0]
-
-    def add_expr            (self, args):
-        return int(args[0]) + int(args[1])
 
 parser =  Lark(grammar, parser="earley", lexer="dynamic_complete")
 
