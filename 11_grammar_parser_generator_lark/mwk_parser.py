@@ -1,9 +1,9 @@
-# cat ~/mwk.git/apple_notes_read_only/main_iphone.mwk.becomesempty | head -100 | tail -18 | python3 mwk_parser.py
+# cat ~/mwk.git/apple_notes_read_only/main_iphone.mwk.becomesempty | head -100 | python3 /Volumes/git/github/python/11_grammar_parser_generator_lark/mwk_parser.py
 from lark import Lark, Transformer
 import sys
 
 grammar = """
-start: snippet+
+start: unparseable snippet+
 
 %import common.WS_INLINE
 %import common.NUMBER
@@ -20,9 +20,14 @@ snippet:        HEADING3 NEWLINE BODY NEWLINE DATESTAMP NEWLINE \
                                         -> parse_snippet
                 | HEADING3              -> parse_ending
 
+unparseable:    BODY -> parse_unparseable
 """
 
 class CalcTransformer(Transformer):
+
+    def parse_unparseable   (self, args):
+        print("parse_unparseable(): "    + args[0], end="")
+        return args[0]
 
     def parse_whitespace    (self, args):
         print("parse_whitespace(): "    + args[0], end="")
