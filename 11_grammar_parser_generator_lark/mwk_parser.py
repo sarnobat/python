@@ -3,7 +3,7 @@ from lark import Lark, Transformer
 import sys
 
 grammar = """
-start: unparseable snippet+
+start: unparseable snippet* unparseable 
 
 %import common.WS_INLINE
 %import common.NUMBER
