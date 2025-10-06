@@ -21,6 +21,7 @@ day_of_year = now.timetuple().tm_yday
 if len(sys.argv) < 2:
 	print("[warning] to see what day of the year it is, run dayofyear.py", file=sys.stderr)
 	print("[error] specify a divisor", file=sys.stderr)
+	print("[error] dm `doy` 10", file=sys.stderr)
 	sys.exit(1)
 	
 divisor = int(sys.argv[1])
