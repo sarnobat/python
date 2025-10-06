@@ -1,0 +1,58 @@
+---
+triple:          'arm64-apple-darwin'
+binary-path:     dayofyear
+relocations:
+  - { offset: 0x26, size: 0x8, addend: 0x0, symName: _PyInit_dayofyear, symObjAddr: 0x0, symBinAddr: 0x100001744, symSize: 0xC }
+  - { offset: 0x40, size: 0x8, addend: 0x0, symName: ___pyx_module_is_main_dayofyear, symObjAddr: 0x14480, symBinAddr: 0x1000080A0, symSize: 0x0 }
+  - { offset: 0x6B, size: 0x8, addend: 0x0, symName: ___pyx_moduledef, symObjAddr: 0x2200, symBinAddr: 0x100008000, symSize: 0x0 }
+  - { offset: 0xCC8, size: 0x8, addend: 0x0, symName: ___pyx_methods, symObjAddr: 0x14488, symBinAddr: 0x1000080A8, symSize: 0x0 }
+  - { offset: 0xCEA, size: 0x8, addend: 0x0, symName: ___pyx_moduledef_slots, symObjAddr: 0x2268, symBinAddr: 0x100008068, symSize: 0x0 }
+  - { offset: 0xD29, size: 0x8, addend: 0x0, symName: __MergedGlobals, symObjAddr: 0x144A8, symBinAddr: 0x1000080C8, symSize: 0x0 }
+  - { offset: 0xF9E, size: 0x8, addend: 0x0, symName: ___pyx_pymod_exec_dayofyear, symObjAddr: 0x664, symBinAddr: 0x100001DA8, symSize: 0x1250 }
+  - { offset: 0xFC5, size: 0x8, addend: 0x0, symName: __MergedGlobals, symObjAddr: 0x144A8, symBinAddr: 0x1000080C8, symSize: 0x0 }
+  - { offset: 0xFDD, size: 0x8, addend: 0x0, symName: __MergedGlobals, symObjAddr: 0x144A8, symBinAddr: 0x1000080C8, symSize: 0x0 }
+  - { offset: 0xFF5, size: 0x8, addend: 0x0, symName: __MergedGlobals, symObjAddr: 0x144A8, symBinAddr: 0x1000080C8, symSize: 0x0 }
+  - { offset: 0x100D, size: 0x8, addend: 0x0, symName: __MergedGlobals, symObjAddr: 0x144A8, symBinAddr: 0x1000080C8, symSize: 0x0 }
+  - { offset: 0x1025, size: 0x8, addend: 0x0, symName: __MergedGlobals, symObjAddr: 0x144A8, symBinAddr: 0x1000080C8, symSize: 0x0 }
+  - { offset: 0x103D, size: 0x8, addend: 0x0, symName: __MergedGlobals, symObjAddr: 0x144A8, symBinAddr: 0x1000080C8, symSize: 0x0 }
+  - { offset: 0x1055, size: 0x8, addend: 0x0, symName: __MergedGlobals, symObjAddr: 0x144A8, symBinAddr: 0x1000080C8, symSize: 0x0 }
+  - { offset: 0x106D, size: 0x8, addend: 0x0, symName: __MergedGlobals, symObjAddr: 0x144A8, symBinAddr: 0x1000080C8, symSize: 0x0 }
+  - { offset: 0x1085, size: 0x8, addend: 0x0, symName: __MergedGlobals, symObjAddr: 0x144A8, symBinAddr: 0x1000080C8, symSize: 0x0 }
+  - { offset: 0x109D, size: 0x8, addend: 0x0, symName: __MergedGlobals, symObjAddr: 0x144A8, symBinAddr: 0x1000080C8, symSize: 0x0 }
+  - { offset: 0x10B5, size: 0x8, addend: 0x0, symName: __MergedGlobals, symObjAddr: 0x144A8, symBinAddr: 0x1000080C8, symSize: 0x0 }
+  - { offset: 0x10CD, size: 0x8, addend: 0x0, symName: __MergedGlobals, symObjAddr: 0x144A8, symBinAddr: 0x1000080C8, symSize: 0x0 }
+  - { offset: 0x2870, size: 0x8, addend: 0x0, symName: __MergedGlobals, symObjAddr: 0x144A8, symBinAddr: 0x1000080C8, symSize: 0x0 }
+  - { offset: 0x288D, size: 0x8, addend: 0x0, symName: ___pyx_string_tab, symObjAddr: 0x24D0, symBinAddr: 0x100004298, symSize: 0x0 }
+  - { offset: 0x291B, size: 0x8, addend: 0x0, symName: ___pyx_k_, symObjAddr: 0x2630, symBinAddr: 0x100003C88, symSize: 0x0 }
+  - { offset: 0x293D, size: 0x8, addend: 0x0, symName: ___pyx_k_argv, symObjAddr: 0x2632, symBinAddr: 0x100003C8A, symSize: 0x0 }
+  - { offset: 0x295F, size: 0x8, addend: 0x0, symName: ___pyx_k_cline_in_traceback, symObjAddr: 0x2637, symBinAddr: 0x100003C8F, symSize: 0x0 }
+  - { offset: 0x2981, size: 0x8, addend: 0x0, symName: ___pyx_k_datetime, symObjAddr: 0x264A, symBinAddr: 0x100003CA2, symSize: 0x0 }
+  - { offset: 0x29A3, size: 0x8, addend: 0x0, symName: ___pyx_k_day_of_year, symObjAddr: 0x2653, symBinAddr: 0x100003CAB, symSize: 0x0 }
+  - { offset: 0x29C5, size: 0x8, addend: 0x0, symName: ___pyx_k_error_specify_an_arg, symObjAddr: 0x265F, symBinAddr: 0x100003CB7, symSize: 0x0 }
+  - { offset: 0x29E7, size: 0x8, addend: 0x0, symName: ___pyx_k_exit, symObjAddr: 0x2676, symBinAddr: 0x100003CCE, symSize: 0x0 }
+  - { offset: 0x29FD, size: 0x8, addend: 0x0, symName: ___pyx_k_file, symObjAddr: 0x267B, symBinAddr: 0x100003CD3, symSize: 0x0 }
+  - { offset: 0x2A13, size: 0x8, addend: 0x0, symName: ___pyx_k_initializing, symObjAddr: 0x2680, symBinAddr: 0x100003CD8, symSize: 0x0 }
+  - { offset: 0x2A35, size: 0x8, addend: 0x0, symName: ___pyx_k_main, symObjAddr: 0x268E, symBinAddr: 0x100003CE6, symSize: 0x0 }
+  - { offset: 0x2A4B, size: 0x8, addend: 0x0, symName: ___pyx_k_module, symObjAddr: 0x2697, symBinAddr: 0x100003CEF, symSize: 0x0 }
+  - { offset: 0x2A6D, size: 0x8, addend: 0x0, symName: ___pyx_k_name, symObjAddr: 0x26A2, symBinAddr: 0x100003CFA, symSize: 0x0 }
+  - { offset: 0x2A83, size: 0x8, addend: 0x0, symName: ___pyx_k_now, symObjAddr: 0x26AB, symBinAddr: 0x100003D03, symSize: 0x0 }
+  - { offset: 0x2AA5, size: 0x8, addend: 0x0, symName: ___pyx_k_print, symObjAddr: 0x26AF, symBinAddr: 0x100003D07, symSize: 0x0 }
+  - { offset: 0x2AC7, size: 0x8, addend: 0x0, symName: ___pyx_k_qualname, symObjAddr: 0x26B5, symBinAddr: 0x100003D0D, symSize: 0x0 }
+  - { offset: 0x2AE9, size: 0x8, addend: 0x0, symName: ___pyx_k_spec, symObjAddr: 0x26C2, symBinAddr: 0x100003D1A, symSize: 0x0 }
+  - { offset: 0x2AFF, size: 0x8, addend: 0x0, symName: ___pyx_k_stderr, symObjAddr: 0x26CB, symBinAddr: 0x100003D23, symSize: 0x0 }
+  - { offset: 0x2B21, size: 0x8, addend: 0x0, symName: ___pyx_k_sys, symObjAddr: 0x26D2, symBinAddr: 0x100003D2A, symSize: 0x0 }
+  - { offset: 0x2B37, size: 0x8, addend: 0x0, symName: ___pyx_k_test, symObjAddr: 0x26D6, symBinAddr: 0x100003D2E, symSize: 0x0 }
+  - { offset: 0x2B4D, size: 0x8, addend: 0x0, symName: ___pyx_k_timetuple, symObjAddr: 0x26DF, symBinAddr: 0x100003D37, symSize: 0x0 }
+  - { offset: 0x2B6F, size: 0x8, addend: 0x0, symName: ___pyx_k_tm_yday, symObjAddr: 0x26E9, symBinAddr: 0x100003D41, symSize: 0x0 }
+  - { offset: 0x2B91, size: 0x8, addend: 0x0, symName: __MergedGlobals, symObjAddr: 0x144A8, symBinAddr: 0x1000080C8, symSize: 0x0 }
+  - { offset: 0x2C22, size: 0x8, addend: 0x0, symName: _PyInit_dayofyear, symObjAddr: 0x0, symBinAddr: 0x100001744, symSize: 0xC }
+  - { offset: 0x2C60, size: 0x8, addend: 0x0, symName: _main, symObjAddr: 0xC, symBinAddr: 0x100001750, symSize: 0x190 }
+  - { offset: 0x2EA1, size: 0x8, addend: 0x0, symName: ___Pyx_main, symObjAddr: 0x19C, symBinAddr: 0x1000018E0, symSize: 0x180 }
+  - { offset: 0x356A, size: 0x8, addend: 0x0, symName: ___pyx_pymod_create, symObjAddr: 0x31C, symBinAddr: 0x100001A60, symSize: 0x348 }
+  - { offset: 0x4548, size: 0x8, addend: 0x0, symName: ___Pyx_ImportDottedModule, symObjAddr: 0x18B4, symBinAddr: 0x100002FF8, symSize: 0x248 }
+  - { offset: 0x4968, size: 0x8, addend: 0x0, symName: ___Pyx_PyObject_FastCallDict, symObjAddr: 0x1CB4, symBinAddr: 0x1000033F8, symSize: 0x210 }
+  - { offset: 0x4CE2, size: 0x8, addend: 0x0, symName: _PyObject_Vectorcall, symObjAddr: 0x1C20, symBinAddr: 0x100003364, symSize: 0x94 }
+  - { offset: 0x4E3A, size: 0x8, addend: 0x0, symName: ___Pyx_PyObject_GetAttrStr_ClearAttributeError, symObjAddr: 0x1EC4, symBinAddr: 0x100003608, symSize: 0x330 }
+  - { offset: 0x5253, size: 0x8, addend: 0x0, symName: ___Pyx__GetModuleGlobalName, symObjAddr: 0x1BA8, symBinAddr: 0x1000032EC, symSize: 0x78 }
+  - { offset: 0x5333, size: 0x8, addend: 0x0, symName: ___Pyx_GetBuiltinName, symObjAddr: 0x1AFC, symBinAddr: 0x100003240, symSize: 0xAC }
+...
