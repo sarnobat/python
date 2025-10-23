@@ -9,6 +9,7 @@ init:
 	pip install PyOpenGL
 	brew install --build-from-source freeglut
 	brew install glew glfw
+	# This one is needed to close the window
 	pip3 install glfw
 
 	
