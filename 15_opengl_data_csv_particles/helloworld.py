@@ -16,6 +16,39 @@ data = pd.read_csv(csv_file)
 
 angle = 0.0
 
+def draw_bounding_cube(x_min, x_max, y_min, y_max, z_min, z_max):
+    glColor3f(1.0, 1.0, 1.0)
+    glBegin(GL_LINE_LOOP)
+    # Bottom face
+    glVertex3f(x_min, y_min, z_min)
+    glVertex3f(x_max, y_min, z_min)
+    glVertex3f(x_max, y_max, z_min)
+    glVertex3f(x_min, y_max, z_min)
+    glEnd()
+
+    glBegin(GL_LINE_LOOP)
+    # Top face
+    glVertex3f(x_min, y_min, z_max)
+    glVertex3f(x_max, y_min, z_max)
+    glVertex3f(x_max, y_max, z_max)
+    glVertex3f(x_min, y_max, z_max)
+    glEnd()
+
+    # Vertical edges
+    glBegin(GL_LINES)
+    glVertex3f(x_min, y_min, z_min)
+    glVertex3f(x_min, y_min, z_max)
+
+    glVertex3f(x_max, y_min, z_min)
+    glVertex3f(x_max, y_min, z_max)
+
+    glVertex3f(x_max, y_max, z_min)
+    glVertex3f(x_max, y_max, z_max)
+
+    glVertex3f(x_min, y_max, z_min)
+    glVertex3f(x_min, y_max, z_max)
+    glEnd()
+
 def main():
     global angle
 
@@ -40,7 +73,7 @@ def main():
     gluPerspective(45, 800/600, 1, 1000)
     glMatrixMode(GL_MODELVIEW)
 
-    # Compute scale to center particles
+    # Compute bounds and center
     x_min, x_max = data['x'].min(), data['x'].max()
     y_min, y_max = data['y'].min(), data['y'].max()
     z_min, z_max = data['z'].min(), data['z'].max()
@@ -60,6 +93,9 @@ def main():
         angle += 0.5
         if angle >= 360.0:
             angle -= 360.0
+
+        # Draw bounding cube
+        draw_bounding_cube(x_min, x_max, y_min, y_max, z_min, z_max)
 
         # Draw particles
         glBegin(GL_POINTS)
