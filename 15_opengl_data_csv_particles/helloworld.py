@@ -23,7 +23,7 @@ def main():
         print("Failed to initialize GLFW")
         sys.exit(1)
 
-    window = glfw.create_window(800, 600, "3D Particles with Height Colors", None, None)
+    window = glfw.create_window(800, 600, "Rotating 3D Spheres", None, None)
     if not window:
         glfw.terminate()
         print("Failed to create GLFW window")
@@ -31,8 +31,15 @@ def main():
 
     glfw.make_context_current(window)
     glEnable(GL_DEPTH_TEST)
-    glPointSize(5.0)
+    glEnable(GL_NORMALIZE)
     glClearColor(0.1, 0.1, 0.1, 1.0)
+
+    # Enable lighting
+    glEnable(GL_LIGHTING)
+    glEnable(GL_LIGHT0)
+    glLightfv(GL_LIGHT0, GL_POSITION, [50.0, 50.0, 100.0, 1.0])
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, [1.0, 1.0, 1.0, 1.0])
+    glLightfv(GL_LIGHT0, GL_SPECULAR, [1.0, 1.0, 1.0, 1.0])
 
     # Perspective projection
     glMatrixMode(GL_PROJECTION)
@@ -40,7 +47,7 @@ def main():
     gluPerspective(45, 800/600, 1, 1000)
     glMatrixMode(GL_MODELVIEW)
 
-    # Compute scale to center particles
+    # Compute center for rotation
     x_min, x_max = data['x'].min(), data['x'].max()
     y_min, y_max = data['y'].min(), data['y'].max()
     z_min, z_max = data['z'].min(), data['z'].max()
@@ -48,10 +55,12 @@ def main():
     y_center = (y_min + y_max)/2
     z_center = (z_min + z_max)/2
 
+    sphere = gluNewQuadric()  # Sphere object
+
     while not glfw.window_should_close(window):
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
         glLoadIdentity()
-        gluLookAt(0, 0, 50, 0, 0, 0, 0, 1, 0)
+        gluLookAt(0, 0, 200, 0, 0, 0, 0, 1, 0)
 
         # Rotate around Y-axis
         glTranslatef(-x_center, -y_center, -z_center)
@@ -61,34 +70,21 @@ def main():
         if angle >= 360.0:
             angle -= 360.0
 
-        # Draw bounding cube
-        glColor3f(0.5, 0.5, 0.5)
-        glBegin(GL_LINES)
-        for xi in [x_min, x_max]:
-            for yi in [y_min, y_max]:
-                for zi in [z_min, z_max]:
-                    # Connect cube edges
-                    if xi == x_min:
-                        glVertex3f(x_min, yi, zi); glVertex3f(x_max, yi, zi)
-                    if yi == y_min:
-                        glVertex3f(xi, y_min, zi); glVertex3f(xi, y_max, zi)
-                    if zi == z_min:
-                        glVertex3f(xi, yi, z_min); glVertex3f(xi, yi, z_max)
-        glEnd()
-
-        # Draw particles colored by height (z)
-        z_range = z_max - z_min if z_max != z_min else 1.0
-        glBegin(GL_POINTS)
+        # Draw spheres
         for _, row in data.iterrows():
-            # Map height to color: low=blue, high=red
-            h = (row['z'] - z_min) / z_range
-            glColor3f(h, 0.0, 1.0 - h)
-            glVertex3f(row['x'], row['y'], row['z'])
-        glEnd()
+            glPushMatrix()
+            glTranslatef(row['x'], row['y'], row['z'])
+            # Material color
+            glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, [0.0, 0.6, 1.0, 1.0])
+            glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, [1.0, 1.0, 1.0, 1.0])
+            glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 50)
+            gluSphere(sphere, 1.0, 16, 16)  # radius, slices, stacks
+            glPopMatrix()
 
         glfw.swap_buffers(window)
         glfw.poll_events()
 
+    gluDeleteQuadric(sphere)
     glfw.terminate()
 
 if __name__ == "__main__":
