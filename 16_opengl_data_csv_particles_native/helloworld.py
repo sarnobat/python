@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import sys
-import pandas as pd
+import csv
 import glfw
 from OpenGL.GL import *
 from OpenGL.GLU import *
@@ -12,30 +12,24 @@ if len(sys.argv) < 2:
     sys.exit(1)
 
 csv_file = sys.argv[1]
-data = pd.read_csv(csv_file)
+
+# Load CSV using standard library
+data = []
+with open(csv_file, newline='') as f:
+    reader = csv.reader(f)
+    header = next(reader)
+    try:
+        # Check if header is numeric
+        [float(x) for x in header]
+        # Header is actually data
+        data.append([float(x) for x in header])
+    except ValueError:
+        # Skip header
+        pass
+    for row in reader:
+        data.append([float(x) for x in row])
 
 angle = 0.0
-
-def draw_bounding_cube(x_min, x_max, y_min, y_max, z_min, z_max):
-    """Draw a wireframe cube around the data range."""
-    glColor3f(1.0, 1.0, 1.0)  # white lines
-    glBegin(GL_LINES)
-    # bottom square
-    glVertex3f(x_min, y_min, z_min); glVertex3f(x_max, y_min, z_min)
-    glVertex3f(x_max, y_min, z_min); glVertex3f(x_max, y_min, z_max)
-    glVertex3f(x_max, y_min, z_max); glVertex3f(x_min, y_min, z_max)
-    glVertex3f(x_min, y_min, z_max); glVertex3f(x_min, y_min, z_min)
-    # top square
-    glVertex3f(x_min, y_max, z_min); glVertex3f(x_max, y_max, z_min)
-    glVertex3f(x_max, y_max, z_min); glVertex3f(x_max, y_max, z_max)
-    glVertex3f(x_max, y_max, z_max); glVertex3f(x_min, y_max, z_max)
-    glVertex3f(x_min, y_max, z_max); glVertex3f(x_min, y_max, z_min)
-    # vertical lines
-    glVertex3f(x_min, y_min, z_min); glVertex3f(x_min, y_max, z_min)
-    glVertex3f(x_max, y_min, z_min); glVertex3f(x_max, y_max, z_min)
-    glVertex3f(x_max, y_min, z_max); glVertex3f(x_max, y_max, z_max)
-    glVertex3f(x_min, y_min, z_max); glVertex3f(x_min, y_max, z_max)
-    glEnd()
 
 def main():
     global angle
@@ -44,7 +38,7 @@ def main():
         print("Failed to initialize GLFW")
         sys.exit(1)
 
-    window = glfw.create_window(800, 600, "Rotating 3D Spheres with Bounding Cube", None, None)
+    window = glfw.create_window(800, 600, "Rotating 3D Particles", None, None)
     if not window:
         glfw.terminate()
         print("Failed to create GLFW window")
@@ -52,38 +46,30 @@ def main():
 
     glfw.make_context_current(window)
     glEnable(GL_DEPTH_TEST)
-    glEnable(GL_NORMALIZE)
+    glPointSize(5.0)
     glClearColor(0.1, 0.1, 0.1, 1.0)
 
-    # Lighting
-    glEnable(GL_LIGHTING)
-    glEnable(GL_LIGHT0)
-    glLightfv(GL_LIGHT0, GL_POSITION, [50.0, 50.0, 100.0, 1.0])
-    glLightfv(GL_LIGHT0, GL_DIFFUSE, [1.0, 1.0, 1.0, 1.0])
-    glLightfv(GL_LIGHT0, GL_SPECULAR, [1.0, 1.0, 1.0, 1.0])
-
-    # Perspective
+    # Perspective projection
     glMatrixMode(GL_PROJECTION)
     glLoadIdentity()
     gluPerspective(45, 800/600, 1, 1000)
     glMatrixMode(GL_MODELVIEW)
 
-    # Data center
-    x_min, x_max = data['x'].min(), data['x'].max()
-    y_min, y_max = data['y'].min(), data['y'].max()
-    z_min, z_max = data['z'].min(), data['z'].max()
+    # Compute scale to center particles
+    xs, ys, zs = zip(*data)
+    x_min, x_max = min(xs), max(xs)
+    y_min, y_max = min(ys), max(ys)
+    z_min, z_max = min(zs), max(zs)
     x_center = (x_min + x_max)/2
     y_center = (y_min + y_max)/2
     z_center = (z_min + z_max)/2
-
-    sphere = gluNewQuadric()
 
     while not glfw.window_should_close(window):
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
         glLoadIdentity()
         gluLookAt(0, 0, 200, 0, 0, 0, 0, 1, 0)
 
-        # Rotation around Y-axis
+        # Rotate around Y-axis
         glTranslatef(-x_center, -y_center, -z_center)
         glRotatef(angle, 0, 1, 0)
         glTranslatef(x_center, y_center, z_center)
@@ -91,23 +77,16 @@ def main():
         if angle >= 360.0:
             angle -= 360.0
 
-        # Draw bounding cube
-        draw_bounding_cube(x_min, x_max, y_min, y_max, z_min, z_max)
-
-        # Draw spheres
-        for _, row in data.iterrows():
-            glPushMatrix()
-            glTranslatef(row['x'], row['y'], row['z'])
-            glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, [0.0, 0.6, 1.0, 1.0])
-            glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, [1.0, 1.0, 1.0, 1.0])
-            glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 50)
-            gluSphere(sphere, 1.0, 16, 16)
-            glPopMatrix()
+        # Draw particles
+        glBegin(GL_POINTS)
+        for x, y, z in data:
+            glColor3f(0.0, 0.6, 1.0)
+            glVertex3f(x, y, z)
+        glEnd()
 
         glfw.swap_buffers(window)
         glfw.poll_events()
 
-    gluDeleteQuadric(sphere)
     glfw.terminate()
 
 if __name__ == "__main__":
