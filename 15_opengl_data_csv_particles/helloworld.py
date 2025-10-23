@@ -2,51 +2,53 @@
 # -*- coding: utf-8 -*-
 
 import sys
-import pandas as pd
+import numpy as np
 import glfw
 from OpenGL.GL import *
 from OpenGL.GLU import *
 
+# Generate sample data if no file is provided
 if len(sys.argv) < 2:
-    print(f"Usage: {sys.argv[0]} <csv_file>")
-    sys.exit(1)
-
-csv_file = sys.argv[1]
-data = pd.read_csv(csv_file)
+    print("No CSV provided, generating random sample data...")
+    np.random.seed(0)
+    N = 500
+    data = np.random.uniform(-10, 10, (N, 3))
+else:
+    import pandas as pd
+    csv_file = sys.argv[1]
+    data = pd.read_csv(csv_file).to_numpy()
 
 angle = 0.0
 
-def draw_bounding_cube(x_min, x_max, y_min, y_max, z_min, z_max):
+def draw_bounding_cube(min_val=-10, max_val=10):
     glColor3f(1.0, 1.0, 1.0)
-    glBegin(GL_LINE_LOOP)
     # Bottom face
-    glVertex3f(x_min, y_min, z_min)
-    glVertex3f(x_max, y_min, z_min)
-    glVertex3f(x_max, y_max, z_min)
-    glVertex3f(x_min, y_max, z_min)
-    glEnd()
-
     glBegin(GL_LINE_LOOP)
-    # Top face
-    glVertex3f(x_min, y_min, z_max)
-    glVertex3f(x_max, y_min, z_max)
-    glVertex3f(x_max, y_max, z_max)
-    glVertex3f(x_min, y_max, z_max)
+    glVertex3f(min_val, min_val, min_val)
+    glVertex3f(max_val, min_val, min_val)
+    glVertex3f(max_val, max_val, min_val)
+    glVertex3f(min_val, max_val, min_val)
     glEnd()
-
+    # Top face
+    glBegin(GL_LINE_LOOP)
+    glVertex3f(min_val, min_val, max_val)
+    glVertex3f(max_val, min_val, max_val)
+    glVertex3f(max_val, max_val, max_val)
+    glVertex3f(min_val, max_val, max_val)
+    glEnd()
     # Vertical edges
     glBegin(GL_LINES)
-    glVertex3f(x_min, y_min, z_min)
-    glVertex3f(x_min, y_min, z_max)
+    glVertex3f(min_val, min_val, min_val)
+    glVertex3f(min_val, min_val, max_val)
 
-    glVertex3f(x_max, y_min, z_min)
-    glVertex3f(x_max, y_min, z_max)
+    glVertex3f(max_val, min_val, min_val)
+    glVertex3f(max_val, min_val, max_val)
 
-    glVertex3f(x_max, y_max, z_min)
-    glVertex3f(x_max, y_max, z_max)
+    glVertex3f(max_val, max_val, min_val)
+    glVertex3f(max_val, max_val, max_val)
 
-    glVertex3f(x_min, y_max, z_min)
-    glVertex3f(x_min, y_max, z_max)
+    glVertex3f(min_val, max_val, min_val)
+    glVertex3f(min_val, max_val, max_val)
     glEnd()
 
 def main():
@@ -56,7 +58,7 @@ def main():
         print("Failed to initialize GLFW")
         sys.exit(1)
 
-    window = glfw.create_window(800, 600, "Rotating 3D Particles", None, None)
+    window = glfw.create_window(800, 600, "3D Particles with Bounding Cube", None, None)
     if not window:
         glfw.terminate()
         print("Failed to create GLFW window")
@@ -73,35 +75,25 @@ def main():
     gluPerspective(45, 800/600, 1, 1000)
     glMatrixMode(GL_MODELVIEW)
 
-    # Compute bounds and center
-    x_min, x_max = data['x'].min(), data['x'].max()
-    y_min, y_max = data['y'].min(), data['y'].max()
-    z_min, z_max = data['z'].min(), data['z'].max()
-    x_center = (x_min + x_max)/2
-    y_center = (y_min + y_max)/2
-    z_center = (z_min + z_max)/2
-
     while not glfw.window_should_close(window):
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
         glLoadIdentity()
-        gluLookAt(0, 0, 200, 0, 0, 0, 0, 1, 0)
+        gluLookAt(0, 0, 50, 0, 0, 0, 0, 1, 0)
 
         # Rotate around Y-axis
-        glTranslatef(-x_center, -y_center, -z_center)
         glRotatef(angle, 0, 1, 0)
-        glTranslatef(x_center, y_center, z_center)
         angle += 0.5
         if angle >= 360.0:
             angle -= 360.0
 
         # Draw bounding cube
-        draw_bounding_cube(x_min, x_max, y_min, y_max, z_min, z_max)
+        draw_bounding_cube(-10, 10)
 
         # Draw particles
         glBegin(GL_POINTS)
-        for _, row in data.iterrows():
+        for x, y, z in data:
             glColor3f(0.0, 0.6, 1.0)
-            glVertex3f(row['x'], row['y'], row['z'])
+            glVertex3f(x, y, z)
         glEnd()
 
         glfw.swap_buffers(window)
