@@ -1,54 +1,106 @@
-# --- Configuration ---
-PFX        := /tmp/pyout
-PYMAJMIN   := 3.12
-PYTHON     := $(PFX)/bin/python$(PYMAJMIN)
-NUITKA     := $(PYTHON) -m nuitka
+# ------------------------------------------------------------
+# Optimized static Python + Nuitka single-file build
+# ------------------------------------------------------------
 
-# The source script and output binary
-SCRIPT     := hello.py
-OUTBIN     := hello_embedded
+PYMAJMIN := 3.12
+PYVER    := 3.12.5
+PFX      := /tmp/pyout
+PYTHON   := $(PFX)/bin/python$(PYMAJMIN)
+LIBA     := $(PFX)/lib/libpython$(PYMAJMIN).a
+INCDIR   := $(PFX)/include/python$(PYMAJMIN)
+PYCONFIG := $(PFX)/bin/python$(PYMAJMIN)-config
 
-# Static library name (copied for clarity and caching)
-LIBA       := libpython$(PYMAJMIN).a
+OUTBIN   := hello_embedded
+SCRIPT   := hello.py
+LIBSTATIC := libpython.a
 
-# --- Targets ---
+PYTHON_SRC := /tmp/Python-$(PYVER)
+PYTHON_TGZ := /tmp/Python-$(PYVER).tgz
+
+# ------------------------------------------------------------
+# Step 1: Build static Python (only if missing)
+# ------------------------------------------------------------
+
+$(PYTHON):
+	@if [ -f "$(LIBA)" ]; then \
+		echo "Static libpython already exists — skipping Python rebuild."; \
+	else \
+		echo "Building static Python under $(PFX)..."; \
+		mkdir -p $(PFX); \
+		if [ ! -d "$(PYTHON_SRC)" ]; then \
+			echo "Preparing Python source in $(PYTHON_SRC)..."; \
+			if [ ! -f "$(PYTHON_TGZ)" ]; then \
+				curl -L -o "$(PYTHON_TGZ)" "https://www.python.org/ftp/python/$(PYVER)/Python-$(PYVER).tgz"; \
+			fi; \
+			cd /tmp && tar xf "$(PYTHON_TGZ)"; \
+		fi; \
+		cd "$(PYTHON_SRC)" && { \
+			./configure \
+				--prefix="$(PFX)" \
+				--disable-shared \
+				--without-ensurepip \
+				--enable-optimizations \
+				--with-lto \
+				--without-tests; \
+			make -j$$(sysctl -n hw.ncpu) install; \
+		}; \
+	fi
+
+# ------------------------------------------------------------
+# Step 2: Install pip + Nuitka if missing
+# ------------------------------------------------------------
+
+$(PFX)/.nuitka_installed: $(PYTHON)
+	@echo "Checking for pip and Nuitka in $(PFX)..."
+	@if ! $(PYTHON) -m pip -V >/dev/null 2>&1; then \
+		echo "Bootstrapping pip into static Python..."; \
+		curl -sS https://bootstrap.pypa.io/get-pip.py -o /tmp/get-pip.py; \
+		$(PYTHON) /tmp/get-pip.py; \
+	fi
+	@if ! $(PYTHON) -m nuitka --version >/dev/null 2>&1; then \
+		echo "Installing Nuitka..."; \
+		$(PYTHON) -m pip install --no-cache-dir nuitka; \
+	fi
+	@touch $(PFX)/.nuitka_installed
+
+# ------------------------------------------------------------
+# Step 3: Copy libpython.a locally (if not already copied)
+# ------------------------------------------------------------
+
+$(LIBSTATIC): $(LIBA)
+	@if [ ! -f "$(LIBSTATIC)" ]; then \
+		echo "Copying $(LIBA) → $(LIBSTATIC)"; \
+		cp $(LIBA) $(LIBSTATIC); \
+	else \
+		echo "$(LIBSTATIC) already exists — skipping copy."; \
+	fi
+
+# ------------------------------------------------------------
+# Step 4: Build single-file binary with Nuitka
+# ------------------------------------------------------------
+
+$(OUTBIN): $(SCRIPT) $(PFX)/.nuitka_installed $(LIBSTATIC)
+	@echo "Building $(OUTBIN) using Nuitka (single-file, static libpython)..."
+	$(PYTHON) -m nuitka --onefile --static-libpython=yes \
+		--clang --remove-output --output-filename=$@ $<
+	@strip -x $(OUTBIN) || true
+	@echo "Built successfully: $(OUTBIN)"
+
+# ------------------------------------------------------------
+# Step 5: Run & maintenance
+# ------------------------------------------------------------
 
 all: $(OUTBIN)
-	@echo "Built with Nuitka successfully:"
+	@echo "Cython is another option for non-trivial cases if you can't get it working manually"
 	@./$(OUTBIN)
 
-# Build the Nuitka binary using the locally copied static lib
-$(OUTBIN): $(SCRIPT) $(PYTHON) $(LIBA)
-	$(NUITKA) --onefile \
-	           --output-filename=$(OUTBIN) \
-	           --static-libpython=yes \
-	           --remove-output \
-	           $(SCRIPT)
-
-# Copy static lib from built Python into current dir
-$(LIBA): $(PYTHON)
-	@echo "Copying static libpython from $(PFX) ..."
-	cp -f $(PFX)/lib/libpython$(PYMAJMIN).a $(LIBA)
-	@echo "Done: $(LIBA)"
-
-# Build static Python (if missing)
-$(PYTHON):
-	@echo "Building static Python under $(PFX)..."
-	@mkdir -p $(PFX)
-	@cd /tmp && { \
-		ls Python-$(PYMAJMIN).5.tgz || \
-		curl -LO https://www.python.org/ftp/python/$(PYMAJMIN).5/Python-$(PYMAJMIN).5.tgz; \
-		tar xf Python-$(PYMAJMIN).5.tgz; \
-		cd Python-$(PYMAJMIN).5; \
-		./configure \
-			--prefix="$(PFX)" \
-			--disable-shared \
-			--without-ensurepip \
-			--enable-optimizations; \
-		make -j$$(sysctl -n hw.ncpu); \
-		make install; \
-	}
-
-# Clean generated artifacts
 clean:
-	rm -rf $(OUTBIN) $(LIBA) build dist *.build *.dist *.bin __pycache__
+	rm -rf __pycache__ build dist $(OUTBIN) *.bin *.build $(LIBSTATIC)
+	@echo "Preserved Python sources and libpython under /tmp."
+
+distclean: clean
+	rm -rf $(PFX) $(PFX)/.nuitka_installed
+	@echo "Preserved $(PYTHON_SRC) and $(PYTHON_TGZ) (not redownloaded next time)."
+
+update-nuitka:
+	@$(PYTHON) -m pip install --upgrade nuitka
