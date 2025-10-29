@@ -2,13 +2,17 @@
 PYTHON := python3
 SRC    := hello.py
 TARGET := hello.dynamic
+TARGET_STATIC := hello.static
 
-all: $(TARGET)
+all: $(TARGET)	$(TARGET_STATIC).static
 
 $(TARGET): $(SRC)
 	$(PYTHON) -m nuitka --static-libpython=no \
 		--output-filename=$(TARGET) \
 		$(SRC)
 
+$(TARGET_STATIC).static:
+	python3 -m nuitka --onefile --static-libpython=no --output-filename=$(TARGET_STATIC) hello.py
+
 clean:
-	rm -rf $(TARGET) $(SRC:.py=.build) $(SRC:.py=.dist)
+	rm -rf $(SRC:.py=.build) $(SRC:.py=.dist)
