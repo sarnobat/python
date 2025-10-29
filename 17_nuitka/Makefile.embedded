@@ -35,14 +35,15 @@ $(PYTHON):
 			cd /tmp && tar xf "$(PYTHON_TGZ)"; \
 		fi; \
 		cd "$(PYTHON_SRC)" && { \
-			./configure \
+			ulimit -n 1024 \
+			&& ./configure \
 				--prefix="$(PFX)" \
 				--disable-shared \
 				--without-ensurepip \
 				--enable-optimizations \
 				--with-lto \
 				--without-tests; \
-			make -j$$(sysctl -n hw.ncpu) install; \
+			make -j$$(sysctl -n hw.ncpu) PROFILE_TASK= install; \
 		}; \
 	fi
 
