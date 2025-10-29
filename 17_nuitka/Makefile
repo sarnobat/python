@@ -95,7 +95,7 @@ all: $(OUTBIN)
 	@./$(OUTBIN)
 
 clean:
-	rm -rf __pycache__ build dist $(OUTBIN) *.bin *.build $(LIBSTATIC)
+	rm -rf __pycache__ build dist $(OUTBIN) *.bin *.build
 	@echo "Preserved Python sources and libpython under /tmp."
 
 distclean: clean
