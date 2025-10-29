@@ -11,7 +11,7 @@ $(TARGET): $(SRC)
 		--output-filename=$(TARGET) \
 		$(SRC)
 
-$(TARGET_STATIC).static:
+$(TARGET_STATIC):
 	python3 -m nuitka --onefile --static-libpython=no --output-filename=$(TARGET_STATIC) hello.py
 
 clean:
