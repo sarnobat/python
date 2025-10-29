@@ -1,14 +1,14 @@
 # Minimal Nuitka Makefile
 PYTHON := python3
 SRC    := hello.py
-TARGET := hello.dynamic
+TARGET_DYNAMIC := hello.dynamic
 TARGET_STATIC := hello.static
 
 all: $(TARGET)	$(TARGET_STATIC).static
 
-$(TARGET): $(SRC)
+$(TARGET_DYNAMIC): $(SRC)
 	$(PYTHON) -m nuitka --static-libpython=no \
-		--output-filename=$(TARGET) \
+		--output-filename=$(TARGET_DYNAMIC) \
 		$(SRC)
 
 $(TARGET_STATIC):
