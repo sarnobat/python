@@ -31,10 +31,11 @@ $(TARGET_STATIC):		libpython.a
 	python3 -m nuitka --onefile \
 	    --static-libpython=no \
 	    --enable-plugin=tk-inter \
-	    --tcl-library-dir=/opt/homebrew/opt/tcl-tk@8/lib \
-	    --tk-library-dir=/opt/homebrew/opt/tcl-tk@8/lib \
+	    --tcl-library-dir=/tmp/tcltk-static/lib \
+	    --tk-library-dir=/tmp/tcltk-static/lib \
 	    --output-filename=hello.static \
 	    hello.py
+
 
 tcltk: $(TCL_LIB) $(TK_LIB) copy-libs
 
@@ -79,9 +80,6 @@ libpython.a:
 	cp $(TCL_SRC)/unix/libtcl8.6.a .
 
 init:
-	@if [ -f "$(LIBA)" ]; then \
-		echo "Static libpython already exists — skipping Python rebuild."; \
-	else \
 		echo "Building static Python under $(PFX)..."; \
 		mkdir -p $(PFX); \
 		if [ ! -d "$(PYTHON_SRC)" ]; then \
@@ -100,7 +98,7 @@ init:
 			--enable-optimizations \
 			--with-lto \
 			--enable-loadable-sqlite-extensions \
-			--with-static-libtk && \
-		make -j$$(sysctl -n hw.ncpu) && \
-		make install; \
-	fi
+			--with-static-libtk \
+			--with-tcltk-includes=/tmp/tcltk-static/include \
+			--with-tcltk-libs="/tmp/tcltk-static/lib/libtcl8.6.a /tmp/tcltk-static/lib/libtk8.6.a" \
+		&& make -j$$(sysctl -n hw.ncpu) 
