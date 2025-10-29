@@ -17,6 +17,8 @@ LIBSTATIC := libpython.a
 PYTHON_SRC := /tmp/Python-$(PYVER)
 PYTHON_TGZ := /tmp/Python-$(PYVER).tgz
 
+.PHONY: $(LIBSTATIC)
+
 # ------------------------------------------------------------
 # Step 1: Build static Python (only if missing)
 # ------------------------------------------------------------
@@ -68,10 +70,12 @@ $(PFX)/.nuitka_installed: $(PYTHON)
 # Step 3: Copy libpython.a locally (if not already copied)
 # ------------------------------------------------------------
 
+
 $(LIBSTATIC): $(LIBA)
 	@if [ ! -f "$(LIBSTATIC)" ]; then \
 		echo "Copying $(LIBA) → $(LIBSTATIC)"; \
-		cp $(LIBA) $(LIBSTATIC); \
+		cp -v $(LIBA) .; \
+		cp -v $(LIBA) $(LIBSTATIC); \
 	else \
 		echo "$(LIBSTATIC) already exists — skipping copy."; \
 	fi
