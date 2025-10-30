@@ -1,74 +1,39 @@
 # ------------------------------------------------------------
-# Optimized static Python + static Tcl/Tk + Nuitka single-file build
+# Optimized static Python + Nuitka single-file build
 # ------------------------------------------------------------
 
 PYMAJMIN := 3.12
 PYVER    := 3.12.5
 PFX      := /tmp/pyout
 PYTHON   := $(PFX)/bin/python$(PYMAJMIN)
-LIBPY    := $(PFX)/lib/libpython$(PYMAJMIN).a
+LIBA     := $(PFX)/lib/libpython$(PYMAJMIN).a
 INCDIR   := $(PFX)/include/python$(PYMAJMIN)
 PYCONFIG := $(PFX)/bin/python$(PYMAJMIN)-config
 
-TKVER    := 8.6.13
-TCLTK_PREFIX := /tmp/tcltk-static
-LIBTCL   := $(TCLTK_PREFIX)/lib/libtcl8.6.a
-LIBTK    := $(TCLTK_PREFIX)/lib/libtk8.6.a
-
 OUTBIN   := hello_embedded
 SCRIPT   := hello.py
+LIBSTATIC := libpython.a
 
 PYTHON_SRC := /tmp/Python-$(PYVER)
 PYTHON_TGZ := /tmp/Python-$(PYVER).tgz
-TCL_SRC   := /tmp/tcl8.6.13
-TK_SRC    := /tmp/tk8.6.13
-
-.PHONY: all clean distclean init tcl tk python nuitka
 
 # ------------------------------------------------------------
-# Step 1: Build static Tcl/Tk
+# Phony targets
 # ------------------------------------------------------------
 
-$(LIBTCL):
-	@if [ ! -f "$@" ]; then \
-		echo "Building static Tcl $(TKVER)..."; \
-		if [ ! -d "$(TCL_SRC)" ]; then \
-			cd /tmp && { \
-				curl -LO https://www.tcl.tk/software/tcl/Tcl$(TKVER)-src.tar.gz; \
-				tar xf Tcl$(TKVER)-src.tar.gz; \
-			}; \
-		fi; \
-		cd $(TCL_SRC)/unix && \
-		./configure --prefix=$(TCLTK_PREFIX) --disable-shared && \
-		make -j$$(sysctl -n hw.ncpu) && \
-		make install; \
-	fi
-
-$(LIBTK): $(LIBTCL)
-	@if [ ! -f "$@" ]; then \
-		echo "Building static Tk $(TKVER)..."; \
-		if [ ! -d "$(TK_SRC)" ]; then \
-			cd /tmp && { \
-				curl -LO https://www.tcl.tk/software/tcl/Tk$(TKVER)-src.tar.gz; \
-				tar xf Tk$(TKVER)-src.tar.gz; \
-			}; \
-		fi; \
-		cd $(TK_SRC)/unix && \
-		./configure --prefix=$(TCLTK_PREFIX) --with-tcl=$(TCLTK_PREFIX)/lib --disable-shared && \
-		make -j$$(sysctl -n hw.ncpu) && \
-		make install; \
-	fi
+.PHONY: all clean distclean update-nuitka
 
 # ------------------------------------------------------------
-# Step 2: Build static Python (only if missing)
+# Step 1: Build static Python (only if missing)
 # ------------------------------------------------------------
 
 $(PYTHON):
-	@if [ -f "$(LIBPY)" ]; then \
-		echo "Static libpython already exists — skipping Python rebuild."; \
-	else \
-		echo "Building static Python $(PYVER) under $(PFX)..."; \
+	@if [ ! -d "$(PFX)" ]; then \
+		echo "Creating prefix directory $(PFX)..."; \
 		mkdir -p $(PFX); \
+	fi
+	@if [ ! -f "$(LIBA)" ]; then \
+		echo "Building static Python under $(PFX)..."; \
 		if [ ! -d "$(PYTHON_SRC)" ]; then \
 			echo "Preparing Python source in $(PYTHON_SRC)..."; \
 			if [ ! -f "$(PYTHON_TGZ)" ]; then \
@@ -76,23 +41,23 @@ $(PYTHON):
 			fi; \
 			cd /tmp && tar xf "$(PYTHON_TGZ)"; \
 		fi; \
-		cd "$(PYTHON_SRC)" && { \
-			ulimit -n 1024 && \
+		cd "$(PYTHON_SRC)" && ( \
+			ulimit -n 1024; \
 			./configure \
 				--prefix="$(PFX)" \
 				--disable-shared \
 				--without-ensurepip \
 				--enable-optimizations \
 				--with-lto \
-				--enable-loadable-sqlite-extensions \
-				--with-tcltk-includes="-I$(TCLTK_PREFIX)/include" \
-				--with-tcltk-libs="-L$(TCLTK_PREFIX)/lib -ltcl8.6 -ltk8.6"; \
-			make -j$$(sysctl -n hw.ncpu) install; \
-		}; \
+				--without-tests; \
+			make -j$$(sysctl -n hw.ncpu) install \
+		); \
+	else \
+		echo "Static libpython already exists — skipping Python rebuild."; \
 	fi
 
 # ------------------------------------------------------------
-# Step 3: Install pip + Nuitka if missing
+# Step 2: Install pip + Nuitka if missing
 # ------------------------------------------------------------
 
 $(PFX)/.nuitka_installed: $(PYTHON)
@@ -109,34 +74,54 @@ $(PFX)/.nuitka_installed: $(PYTHON)
 	@touch $(PFX)/.nuitka_installed
 
 # ------------------------------------------------------------
+# Step 3: Copy libpython.a locally (if not already copied)
+# ------------------------------------------------------------
+
+$(LIBSTATIC): $(LIBA)
+	@if [ ! -f "$(LIBSTATIC)" ]; then \
+		echo "Copying $(LIBA) → $(LIBSTATIC)"; \
+		cp -v $(LIBA) $(LIBSTATIC); \
+	else \
+		echo "$(LIBSTATIC) already exists — skipping copy."; \
+	fi
+
+# ------------------------------------------------------------
 # Step 4: Build single-file binary with Nuitka
 # ------------------------------------------------------------
 
-$(OUTBIN): $(SCRIPT) $(PFX)/.nuitka_installed $(LIBPY) $(LIBTCL) $(LIBTK)
+$(OUTBIN): $(SCRIPT) $(PFX)/.nuitka_installed $(LIBSTATIC)
 	@echo "Building $(OUTBIN) using Nuitka (single-file, static libpython + _tkinter)..."
 	$(PYTHON) -m nuitka --onefile --static-libpython=yes \
-		--enable-plugin=tk-inter \
-		--tcl-library-dir=$(TCLTK_PREFIX)/lib \
-		--tk-library-dir=$(TCLTK_PREFIX)/lib \
 		--clang --remove-output \
+		--enable-plugin=tk-inter \
+		--tcl-library-dir=/tmp/tcltk-static/lib \
+		--tk-library-dir=/tmp/tcltk-static/lib \
 		--output-filename=$@ $<
 	@strip -x $(OUTBIN) || true
 	@echo "Built successfully: $(OUTBIN)"
 
 # ------------------------------------------------------------
-# Step 5: Run & maintenance
+# Step 5: Build all
 # ------------------------------------------------------------
 
 all: $(OUTBIN)
-	@echo "Built $(OUTBIN). Run it with ./$(OUTBIN)"
+	@echo "You can now run ./$(OUTBIN)"
+
+# ------------------------------------------------------------
+# Clean targets
+# ------------------------------------------------------------
 
 clean:
-	rm -rf __pycache__ build dist *.bin *.so *.a *build
-	@echo "Preserved sources under /tmp."
+	rm -rf __pycache__ build dist *.bin *build
+	@echo "Preserved Python sources and libpython under /tmp."
 
 distclean: clean
 	rm -rf $(PFX) $(PFX)/.nuitka_installed
-	@echo "Preserved Python/Tcl/Tk sources (not redownloaded)."
+	@echo "Preserved $(PYTHON_SRC) and $(PYTHON_TGZ) (not redownloaded next time)."
+
+# ------------------------------------------------------------
+# Upgrade Nuitka
+# ------------------------------------------------------------
 
 update-nuitka:
 	@$(PYTHON) -m pip install --upgrade nuitka
