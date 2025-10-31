@@ -25,7 +25,7 @@ PYTHON_TGZ := /tmp/Python-$(PYVER).tgz
 # ------------------------------------------------------------
 
 default:
-	@echo "I couldn't get this working"
+	@echo "I couldn't get this working. See 17_nuitka_helloworld"
 	
 $(PYTHON):
 	@if [ -f "$(LIBA)" ]; then \
