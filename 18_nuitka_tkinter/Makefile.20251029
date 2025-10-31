@@ -27,6 +27,9 @@ PYTHON_TGZ := /tmp/Python-$(PYVER).tgz
 # Step 1: Build static Python (only if missing)
 # ------------------------------------------------------------
 
+default:
+	@echo "I couldn't get this working"
+	
 $(PYTHON):
 	@if [ ! -d "$(PFX)" ]; then \
 		echo "Creating prefix directory $(PFX)..."; \
