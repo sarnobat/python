@@ -24,7 +24,9 @@ PYTHON_TGZ := /tmp/Python-$(PYVER).tgz
 # Step 1: Build static Python (only if missing)
 # ------------------------------------------------------------
 
-
+default:
+	@echo "I couldn't get this working"
+	
 $(PYTHON):
 	@if [ -f "$(LIBA)" ]; then \
 		echo "Static libpython already exists — skipping Python rebuild."; \
