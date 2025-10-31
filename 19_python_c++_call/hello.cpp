@@ -1,4 +1,5 @@
 #include <iostream>
-extern "C" void hello() {
-    std::cout << "Hello from C++" << std::endl;
+
+extern "C" void greet(const char* name) {
+    std::cout << "Hello, " << name << " from C++" << std::endl;
 }
