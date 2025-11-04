@@ -11,24 +11,26 @@ img = np.zeros((canvas_size, canvas_size), dtype=np.uint8)
 # Square vertices expanded to match 'sides'
 square = np.zeros((sides, 2), dtype=np.float32)
 points_per_side = sides // 4
+square_min = padding
+square_max = canvas_size - padding
 for i in range(points_per_side):
     t = i / points_per_side
     # Top edge
-    square[i] = [padding + t*(canvas_size-2*padding), padding]
+    square[i] = [square_min + t*(square_max - square_min), square_min]
     # Right edge
-    square[i + points_per_side] = [canvas_size-padding, padding + t*(canvas_size-2*padding)]
+    square[i + points_per_side] = [square_max, square_min + t*(square_max - square_min)]
     # Bottom edge
-    square[i + 2*points_per_side] = [canvas_size-padding - t*(canvas_size-2*padding), canvas_size-padding]
+    square[i + 2*points_per_side] = [square_max - t*(square_max - square_min), square_max]
     # Left edge
-    square[i + 3*points_per_side] = [padding, canvas_size-padding - t*(canvas_size-2*padding)]
+    square[i + 3*points_per_side] = [square_min, square_max - t*(square_max - square_min)]
 
-# Target polygon: 32-gon approximating a circle
-center = canvas_size/2
-radius = (canvas_size - 2*padding)/2
+# Target polygon: 32-gon approximating a circle, scaled to fit square bbox
+center = (square_min + square_max)/2
+half_width = (square_max - square_min)/2
 angles = np.linspace(0, 2*np.pi, sides, endpoint=False)
 target = np.zeros((sides, 2), dtype=np.float32)
 for i, a in enumerate(angles):
-    target[i] = [center + radius*np.cos(a), center + radius*np.sin(a)]
+    target[i] = [center + half_width*np.cos(a), center + half_width*np.sin(a)]
 
 # Morph loop
 for t in np.linspace(0, 1, frames):
