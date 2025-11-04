@@ -4,53 +4,44 @@ import numpy as np
 canvas_size = 400
 padding = 50
 frames = 60
+sides = 32  # target polygon edges
 
 img = np.zeros((canvas_size, canvas_size), dtype=np.uint8)
 
-# Square vertices (clockwise, inside padded region)
-square = np.array([
-    [padding, padding],
-    [canvas_size-padding, padding],
-    [canvas_size-padding, canvas_size-padding],
-    [padding, canvas_size-padding]
-], dtype=np.float32)
+# Square vertices expanded to match 'sides'
+square = np.zeros((sides, 2), dtype=np.float32)
+points_per_side = sides // 4
+for i in range(points_per_side):
+    t = i / points_per_side
+    # Top edge
+    square[i] = [padding + t*(canvas_size-2*padding), padding]
+    # Right edge
+    square[i + points_per_side] = [canvas_size-padding, padding + t*(canvas_size-2*padding)]
+    # Bottom edge
+    square[i + 2*points_per_side] = [canvas_size-padding - t*(canvas_size-2*padding), canvas_size-padding]
+    # Left edge
+    square[i + 3*points_per_side] = [padding, canvas_size-padding - t*(canvas_size-2*padding)]
 
-# Octagon vertices (clockwise, inside padded region)
-a = padding + 0.3*(canvas_size-2*padding)
-b = canvas_size - padding - 0.3*(canvas_size-2*padding)
-octagon = np.array([
-    [a, padding],
-    [b, padding],
-    [canvas_size-padding, a],
-    [canvas_size-padding, b],
-    [b, canvas_size-padding],
-    [a, canvas_size-padding],
-    [padding, b],
-    [padding, a]
-], dtype=np.float32)
+# Target polygon: 32-gon approximating a circle
+center = canvas_size/2
+radius = (canvas_size - 2*padding)/2
+angles = np.linspace(0, 2*np.pi, sides, endpoint=False)
+target = np.zeros((sides, 2), dtype=np.float32)
+for i, a in enumerate(angles):
+    target[i] = [center + radius*np.cos(a), center + radius*np.sin(a)]
 
-# Expand square to 8 points to match octagon
-square8 = np.zeros((8, 2), dtype=np.float32)
-square8[0] = square[0]
-square8[1] = square[0]
-square8[2] = square[1]
-square8[3] = square[1]
-square8[4] = square[2]
-square8[5] = square[2]
-square8[6] = square[3]
-square8[7] = square[3]
-
+# Morph loop
 for t in np.linspace(0, 1, frames):
-    shape = (1-t)*square8 + t*octagon
+    shape = (1-t)*square + t*target
 
     img.fill(0)
     cv2.fillPoly(img, [shape.astype(np.int32)], 255)
 
-    cv2.imshow("Square → Octagon Morph", img)
+    cv2.imshow(f"Square → {sides}-gon Morph", img)
     key = cv2.waitKey(50)
     if key & 0xFF == 27:
         break
 
-cv2.imshow("Square → Octagon Morph", img)
+cv2.imshow(f"Square → {sides}-gon Morph", img)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
