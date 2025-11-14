@@ -5,7 +5,7 @@ TARGET   := libhello.dylib
 PYTHON   := python3
 
 # ---- Default target ----
-all: $(TARGET)
+all: $(TARGET)	run
 
 # ---- Build shared library ----
 $(TARGET): hello.cpp
