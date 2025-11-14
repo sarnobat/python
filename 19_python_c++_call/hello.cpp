@@ -6,7 +6,6 @@ extern "C" void greet(const char* name) {
 }
 
 int main (int argc, char * const argv[]) {
-    // std::cout << "Hello, World CPP\n";
     greet("Chinnu");
     return 0;
 }
