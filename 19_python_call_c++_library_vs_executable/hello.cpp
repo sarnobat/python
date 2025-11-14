@@ -6,6 +6,6 @@ extern "C" void greet(const char* name) {
 }
 
 int main (int argc, char * const argv[]) {
-    greet("Chinnu");
+    greet(argv[1]);
     return 0;
 }
