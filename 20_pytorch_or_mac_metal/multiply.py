@@ -4,7 +4,7 @@ import torch
 device = torch.device("mps" if torch.backends.mps.is_available() else "cpu")
 print("Using:", device)
 
-# Literal data: no loops, no random generation
+# Literal data: no loops
 input_list = [
     0, 1, 0, 1, 1, 0, 0, 1,
     1, 1, 0, 0, 1, 0, 1, 0
@@ -12,14 +12,14 @@ input_list = [
 
 factor = 3
 
-# Move list to MPS GPU
+# Move to GPU
 x = torch.tensor(input_list, dtype=torch.float32, device=device)
 
-# GPU-parallel multiply
-y = x * factor    # runs on Apple GPU (MPS)
+# GPU parallel multiply
+y = x * factor
 
-# Bring back to CPU for printing
-output_list = y.to("cpu").tolist()
+# Convert to int before printing
+output_list = y.to("cpu").to(torch.int32).tolist()
 
 print("Input: ", input_list)
 print("Output:", output_list)
