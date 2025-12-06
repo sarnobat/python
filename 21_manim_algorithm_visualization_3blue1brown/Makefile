@@ -7,6 +7,7 @@
 
 # Makefile for Manim animations (v0.19+)
 # Keeps only final MP4s in output/, deletes media/ after rendering
+# Creates symlinks in the current folder for easy access
 
 MANIM = manim
 FLAGS = -ql  # low quality: 480p15
@@ -22,9 +23,9 @@ SCRIPTS = hello_world.py HelloWorld \
 # Default target: render and play
 play: all
 	@echo "Playing selected videos..."
-	# Open the final MP4s from output/
-	open $(OUTPUT)/HelloWorld.mp4
-	open $(OUTPUT)/RemoveFirstElement.mp4
+	# Open the final MP4s from output/ or symlinks
+	open HelloWorld.mp4
+	open RemoveFirstElement.mp4
 
 all: render
 
@@ -46,10 +47,12 @@ render:
 	done
 	@echo "Deleting entire media/ folder..."
 	@rm -rf media
+	@echo "Creating symlinks to MP4s in current folder..."
+	@ln -srf $(OUTPUT)/*.mp4 .
 
 clean:
-	@echo "Removing output/ folder..."
-	rm -rf $(OUTPUT)
+	@echo "Removing output/ folder and symlinks..."
+	rm -rf $(OUTPUT) *.mp4
 
 help:
 	manim render --help
