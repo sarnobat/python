@@ -1,5 +1,0 @@
-# This file is used internally by FFMPEG.
-file 'file:/Volumes/git/github/depot_parent/python/21_manim_algorithm_visualization_3blue1brown/media/videos/remove_first/480p15/partial_movie_files/RemoveFirstElement/1185818338_1413234167_223132457.mp4'
-file 'file:/Volumes/git/github/depot_parent/python/21_manim_algorithm_visualization_3blue1brown/media/videos/remove_first/480p15/partial_movie_files/RemoveFirstElement/624642324_4071516364_1357084645.mp4'
-file 'file:/Volumes/git/github/depot_parent/python/21_manim_algorithm_visualization_3blue1brown/media/videos/remove_first/480p15/partial_movie_files/RemoveFirstElement/624642324_1487706958_1560590217.mp4'
-file 'file:/Volumes/git/github/depot_parent/python/21_manim_algorithm_visualization_3blue1brown/media/videos/remove_first/480p15/partial_movie_files/RemoveFirstElement/624642324_4247107814_3968459843.mp4'
