@@ -16,7 +16,8 @@ OUTPUT = output
 # List of scripts and their scene names
 # Format: script.py SceneClass
 SCRIPTS = hello_world.py HelloWorld \
-          remove_first.py RemoveFirstElement
+          remove_first.py RemoveFirstElement \
+          tree.py SubsetTree
 
 .PHONY: all render play clean
 
@@ -24,8 +25,9 @@ SCRIPTS = hello_world.py HelloWorld \
 play: all
 	@echo "Playing selected videos..."
 	# Open the final MP4s from output/ or symlinks
-	open HelloWorld.mp4
-	open RemoveFirstElement.mp4
+# 	open HelloWorld.mp4
+# 	open RemoveFirstElement.mp4
+	open SubsetTree.mp4
 
 all: render
 
