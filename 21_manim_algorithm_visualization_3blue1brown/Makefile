@@ -6,10 +6,11 @@
 # 	manim --quality l hello_world.py HelloWorld
 
 # Makefile for Manim animations (v0.19+)
-# Render, clean temporary files, and optionally play videos
+# Keeps only final MP4s in output/, deletes media/ after rendering
 
 MANIM = manim
-FLAGS = -ql  # low quality rendering; change to -qm or -pqh for higher quality
+FLAGS = -ql  # low quality: 480p15
+OUTPUT = output
 
 # List of scripts and their scene names
 # Format: script.py SceneClass
@@ -18,20 +19,18 @@ SCRIPTS = hello_world.py HelloWorld \
 
 .PHONY: all render play clean
 
-
-# Play selected videos
-play:	all
+# Default target: render and play
+play: all
 	@echo "Playing selected videos..."
-	# Uncomment the scenes you want to play:
-	# open media/videos/hello_world/1080p60/HelloWorld.mp4
-	open media/videos/remove_first/1080p60/RemoveFirstElement.mp4
+	# Open the final MP4s from output/
+	open $(OUTPUT)/HelloWorld.mp4
+	open $(OUTPUT)/RemoveFirstElement.mp4
 
-# Default target: render all
 all: render
 
-# Render all scenes
 render:
 	@echo "Rendering all Manim scenes..."
+	@mkdir -p $(OUTPUT)
 	@set -- $(SCRIPTS); \
 	while [ "$$#" -gt 0 ]; do \
 		script=$$1; \
@@ -39,16 +38,18 @@ render:
 		shift 2; \
 		echo "Rendering $$script -> $$scene"; \
 		$(MANIM) $(FLAGS) $$script $$scene; \
-		# Remove all partial movie files and lock files \
-		find media -type d -name partial_movie_files -exec rm -rf {} +; \
-		find media -type f -name '*.lock' -exec rm -f {} +; \
+		# Find the rendered MP4 and copy it to output/ \
+		VIDEO_PATH=$$(find media/videos -type f -name "$$scene.mp4" | head -n 1); \
+		if [ -f "$$VIDEO_PATH" ]; then \
+			cp "$$VIDEO_PATH" $(OUTPUT)/; \
+		fi; \
 	done
+	@echo "Deleting entire media/ folder..."
+	@rm -rf media
 
-
-# Clean all generated media
 clean:
-	@echo "Removing all rendered media..."
-	rm -rf media
+	@echo "Removing output/ folder..."
+	rm -rf $(OUTPUT)
 
 help:
 	manim render --help
