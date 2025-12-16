@@ -12,11 +12,16 @@ start: unparseable snippet* unparseable
 // we can't %ignore newlines, because we need to preserve the corpus newlines
 
 HEADING3.1:     /===\s[^=\n]*\s*===/
+HASHTAG: /#[^\n]*/ NEWLINE
 DATESTAMP:      /[0-9]{4}-[0-9]{2}-[0-9]{2}/
 WHITESPACE:     /\s+/
-BODY:           /(.|\s)+?(?=(=== ===|\d{4}-\d{2}-\d{2}|\Z))/
+# BODY:           /(.|\s)+?(?=(=== ===|\d{4}-\d{2}-\d{2}|\Z))/
+BODY: /(.|\s)+?(?=(===[^\r\n]*===|\#[^\n]*\n|\d{4}-\d{2}-\d{2}|\Z))/
 
-snippet:        HEADING3 NEWLINE BODY NEWLINE DATESTAMP NEWLINE \
+
+
+hashtags:       HASHTAG*     -> parse_hashtags
+snippet:        HEADING3 NEWLINE hashtags BODY NEWLINE DATESTAMP NEWLINE \
                                         -> parse_snippet
                 | HEADING3              -> parse_ending
 
@@ -40,12 +45,22 @@ class MwkTransformer(Transformer):
     def parse_ending        (self, args):
         print("parse_ending(): "        + args[0])
         return args[0]
+    
+    def HASHTAG(self, args):
+        # args = [text, newline]
+        # return args[0] + args[1]
+        return args.value.strip()
+
+    def parse_hashtags(self, args):
+        return args
+
 
     def parse_snippet        (self, args):
         print("snippet(): heading "     + args[0])
         print("snippet(): "             + args[1], end="")
-        print("snippet(): "             + args[2])
+        print("snippet(): hashtag: "             + str(args[2]), end="\n")
         print("snippet(): "             + args[3], end="")
+        print("snippet():   " + args[5])
         print("snippet(): datestamp = " + args[4])
         return args[0]
 
