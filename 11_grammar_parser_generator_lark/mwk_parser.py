@@ -26,7 +26,7 @@ unparseable:    BODY -> parse_unparseable
 class MwkTransformer(Transformer):
 
     def parse_unparseable   (self, args):
-        print("parse_unparseable(): "    + args[0], end="")
+        print("parse_unparseable(): "    + args[0], end="\n")
         return args[0]
 
     def parse_whitespace    (self, args):
