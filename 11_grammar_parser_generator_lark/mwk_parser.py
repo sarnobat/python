@@ -1,6 +1,7 @@
 # cat ~/mwk.git/apple_notes_read_only/main_iphone.mwk.becomesempty | head -100 | python3 /Volumes/git/github/python/11_grammar_parser_generator_lark/mwk_parser.py
 from lark import Lark, Transformer, Token, Tree
 import sys
+from typing import Dict, Any, List
 
 grammar = r"""
 start: unparseable snippet* unparseable 
@@ -50,6 +51,11 @@ class MwkTransformer(Transformer):
         print("parse_ending(): "        + args[0])
         return args[0]
     
+    def DATESTAMP(self, args):
+        # args = [text, newline]
+        # return args[0] + args[1]
+        return { "datestamp" : args.value.strip()}
+    
     def HASHTAG(self, args):
         # args = [text, newline]
         # return args[0] + args[1]
@@ -70,21 +76,27 @@ class MwkTransformer(Transformer):
 
     def parse_hashtags(self, args):
         print("parse_hashtags(): "      + str(args))
-        return args
+        return {"hashtags":args}
+        # tags: List[str] = []
+        # for d in args:
+        #     tags.extend(d["hashtags"])
+        # return {"hashtags": tags}
+
 
 
     def parse_snippet        (self, args1):
         args = [s for s in args1 if s != ""]
-
+        d = {}
         for(i, a) in enumerate(args):
             print(f"args[{i}] = {a}")
+            # d.update(args[i])
 
-        print("snippet(): heading "     + args[0])
-        print("snippet():  "             + args[1], end="")
-        print("snippet(): hashtag: "             + str(args[2]), end="\n")
-        print("snippet(): body:"             + args[3], end="\n")
-        print("snippet(): datestamp = " + args[4])
-        print("snippet(): " + args[5])
+        # print("snippet(): heading "     + args[0])
+        # print("snippet():  "             + args[1], end="")
+        # print("snippet(): hashtag: "             + str(args[2]), end="\n")
+        # print("snippet(): body:"             + args[3], end="\n")
+        # print("snippet(): datestamp = " + args[4])
+        # print("snippet(): " + args[5])
         return args
 
 parser =  Lark(grammar, parser="earley", lexer="dynamic_complete")
