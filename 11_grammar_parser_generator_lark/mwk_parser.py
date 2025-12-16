@@ -48,8 +48,13 @@ class MwkTransformer(Transformer):
         return args[0]
 
     def parse_ending        (self, args):
-        print("parse_ending(): "        + args[0])
-        return args[0]
+        # print("parse_ending(): "        + args[0])
+        return args
+    
+    def HEADING3(self, args):
+        # args = [text, newline]
+        # return args[0] + args[1]
+        return { "heading": args.value.strip()}
     
     def DATESTAMP(self, args):
         # args = [text, newline]
@@ -72,7 +77,7 @@ class MwkTransformer(Transformer):
     def parse_body(self, args :list[str]):
         # print("parse_body(): " + str(type(args)), end="")
         # args is a list of strings (BODY_LINE and NEWLINE)
-        return "".join(args)
+        return {"body": "".join(args)}
 
     def parse_hashtags(self, args):
         print("parse_hashtags(): "      + str(args))
