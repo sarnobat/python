@@ -15,23 +15,26 @@ HEADING3.1:     /===\s[^=\n]*\s*===/
 HASHTAG: /#[^\n]*/ NEWLINE
 DATESTAMP:      /[0-9]{4}-[0-9]{2}-[0-9]{2}/
 WHITESPACE:     /\s+/
-# BODY:           /(.|\s)+?(?=(=== ===|\d{4}-\d{2}-\d{2}|\Z))/
-BODY: /(.|\s)+?(?=(===[^\r\n]*===|\#[^\n]*\n|\d{4}-\d{2}-\d{2}|\Z))/
+# BODY1:           /(.|\s)+?(?=(=== ===|\d{4}-\d{2}-\d{2}|\Z))/
+BODY1: /(.|\s)+?(?=(===[^\r\n]*===|\#[^\n]*\n|\d{4}-\d{2}-\d{2}|\Z))/
+# BODY1: /(?!#)(?!#)(.|\s)+?(?=(===[^\r\n]*===|\#[^\n]*\n|\d{4}-\d{2}-\d{2}|\Z))/
+# BODY_LINE: /(?!===)(?!\d{4}-\d{2}-\d{2})[^\n]+/
 
 
-
+body: BODY1 -> parse_body
+# body: (BODY_LINE NEWLINE*)+
 hashtags:       HASHTAG*     -> parse_hashtags
-snippet:        HEADING3 NEWLINE hashtags BODY NEWLINE DATESTAMP NEWLINE \
+snippet:        HEADING3 NEWLINE* hashtags body NEWLINE DATESTAMP NEWLINE \
                                         -> parse_snippet
-                | HEADING3              -> parse_ending
+                | HEADING3 body              -> parse_ending
 
-unparseable:    BODY -> parse_unparseable
+unparseable:    body -> parse_unparseable
 """
 
 class MwkTransformer(Transformer):
 
     def parse_unparseable   (self, args):
-        print("parse_unparseable(): "    + args[0], end="\n")
+        print("parse_unparseable(): "    + str(args[0]), end="\n")
         return args[0]
 
     def parse_whitespace    (self, args):
@@ -50,16 +53,30 @@ class MwkTransformer(Transformer):
         # args = [text, newline]
         # return args[0] + args[1]
         return args.value.strip()
+    
+    # def BODY1(self, args):
+    #     print("BODY1(): " + args.value, end="")
+    #     return args.value.strip()
+
+    def parse_body(self, args :list[str]):
+        # print("parse_body(): " + str(type(args)), end="")
+        # args is a list of strings (BODY_LINE and NEWLINE)
+        return "".join(args)
 
     def parse_hashtags(self, args):
+        print("parse_hashtags(): "      + str(args))
         return args
 
 
     def parse_snippet        (self, args):
+
+        for(i, a) in enumerate(args):
+            print(f"args[{i}] = {a}")
+
         print("snippet(): heading "     + args[0])
-        print("snippet(): "             + args[1], end="")
+        print("snippet(): newline "             + args[1], end="")
         print("snippet(): hashtag: "             + str(args[2]), end="\n")
-        print("snippet(): "             + args[3], end="")
+        print("snippet(): "             + str(args[3]), end="")
         print("snippet():   " + args[5])
         print("snippet(): datestamp = " + args[4])
         return args[0]
