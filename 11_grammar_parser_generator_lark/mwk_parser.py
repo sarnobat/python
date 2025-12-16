@@ -52,11 +52,15 @@ class CalcTransformer(Transformer):
 parser =  Lark(grammar, parser="earley", lexer="dynamic_complete")
 
 def main():
+    print("Reading from stdin...\n")
     text = sys.stdin.read().strip()
+    print("Parsing...\n")
 
     tree = parser.parse(text)
+    print("\nTransforming...\n")
 
     result = CalcTransformer().transform(tree)
+    print("\nDone.")
 
 if __name__ == '__main__':
     main()
