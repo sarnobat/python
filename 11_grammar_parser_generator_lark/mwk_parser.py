@@ -67,8 +67,8 @@ class MwkTransformer(Transformer):
         return args.value.strip()
 
 
-    # def NEWLINE(self, tok: Token) -> None:
-    #     return None   # remove NEWLINE entirely
+    def NEWLINE(self, tok: Token) -> None:
+        return None   # remove NEWLINE entirely
 
     # def BODY1(self, args):
     #     print("BODY1(): " + args.value, end="")
@@ -90,11 +90,11 @@ class MwkTransformer(Transformer):
 
 
     def parse_snippet        (self, args1):
-        args = [s for s in args1 if s != ""]
+        args = [s for s in args1 if s and s != ""]
         d = {}
         for(i, a) in enumerate(args):
-            print(f"args[{i}] = {a}")
-            # d.update(args[i])
+            # print(f"args[{i}] = {a}")
+            d.update(args[i])
 
         # print("snippet(): heading "     + args[0])
         # print("snippet():  "             + args[1], end="")
@@ -102,7 +102,8 @@ class MwkTransformer(Transformer):
         # print("snippet(): body:"             + args[3], end="\n")
         # print("snippet(): datestamp = " + args[4])
         # print("snippet(): " + args[5])
-        return args
+        print("parse_snippet(): " + str(d))
+        return d
 
 parser =  Lark(grammar, parser="earley", lexer="dynamic_complete")
 
