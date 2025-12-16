@@ -14,7 +14,8 @@ start: unparseable snippet* unparseable
 HEADING3.1:     /=== ===/
 DATESTAMP:      /[0-9]{4}-[0-9]{2}-[0-9]{2}/
 WHITESPACE:     /\s+/
-BODY:           /(.|\s)+/
+BODY: /(.|\s)+?(?=(=== ===|\d{4}-\d{2}-\d{2}|\Z))/
+
 
 snippet:        HEADING3 NEWLINE BODY NEWLINE DATESTAMP NEWLINE \
                                         -> parse_snippet
