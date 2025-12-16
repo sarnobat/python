@@ -28,14 +28,15 @@ snippet:        HEADING3 NEWLINE* hashtags? body? NEWLINE? DATESTAMP? NEWLINE \
                                         -> parse_snippet
                 | HEADING3 NEWLINE* body? NEWLINE*         -> parse_ending
 
-unparseable:    body -> parse_unparseable
+unparseable:    body? -> parse_unparseable
 """
 
 class MwkTransformer(Transformer):
 
     def parse_unparseable   (self, args):
-        print("parse_unparseable(): "    + str(args[0]), end="\n")
-        return args[0]
+        # print("parse_unparseable(): "    + str(args[0]), end="\n")
+        # return args[0]
+        return args
 
     def parse_whitespace    (self, args):
         print("parse_whitespace(): "    + args[0], end="")
