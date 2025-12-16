@@ -23,7 +23,7 @@ snippet:        HEADING3 NEWLINE BODY NEWLINE DATESTAMP NEWLINE \
 unparseable:    BODY -> parse_unparseable
 """
 
-class CalcTransformer(Transformer):
+class MwkTransformer(Transformer):
 
     def parse_unparseable   (self, args):
         print("parse_unparseable(): "    + args[0], end="")
@@ -56,7 +56,7 @@ def main():
 
     tree = parser.parse(text)
 
-    result = CalcTransformer().transform(tree)
+    result = MwkTransformer().transform(tree)
 
 if __name__ == '__main__':
     main()
