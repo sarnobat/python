@@ -1,4 +1,6 @@
 # cat ~/mwk.git/apple_notes_read_only/main_iphone.mwk.becomesempty | head -100 | python3 /Volumes/git/github/python/11_grammar_parser_generator_lark/mwk_parser.py
+from sys import stderr
+import json
 from lark import Lark, Transformer, Token, Tree
 import sys
 from typing import Dict, Any, List
@@ -13,11 +15,11 @@ start: unparseable snippet* unparseable
 // we can't %ignore newlines, because we need to preserve the corpus newlines
 
 HEADING3.1:     /===\s[^=\n]*\s*===/
-HASHTAG: /#[^\n]*/ NEWLINE
-DATESTAMP:      /[0-9]{4}-[0-9]{2}-[0-9]{2}/
+HASHTAG.1: /#[^\n]*/ NEWLINE
+DATESTAMP.1:      /[0-9]{4}-[0-9]{2}-[0-9]{2}/
 WHITESPACE:     /\s+/
 # BODY1:           /(.|\s)+?(?=(=== ===|\d{4}-\d{2}-\d{2}|\Z))/
-BODY1: /(?!\d{4}-\d{2}-\d{2})(?!#)(.|\s)+?(?=(===[^\r\n]*===|\#[^\n]*\n|\d{4}-\d{2}-\d{2}|\Z))/
+BODY1.2: /(?!\d{4}-\d{2}-\d{2})(?!#)(.|\s)+?(?=(===[^\r\n]*===|\#[^\n]*\n|\d{4}-\d{2}-\d{2}|\Z))/
 # BODY1: /(?!#)(?!#)(.|\s)+?(?=(===[^\r\n]*===|\#[^\n]*\n|\d{4}-\d{2}-\d{2}|\Z))/
 # BODY_LINE: /(?!===)(?!\d{4}-\d{2}-\d{2})[^\n]+/
 
@@ -33,6 +35,35 @@ unparseable:    body? -> parse_unparseable
 """
 
 class MwkTransformer(Transformer):
+
+    def heading_line(self, args):
+        # HEADING3 NEWLINE
+        return args[0]
+
+    def datestamp_line(self, args):
+        # DATESTAMP NEWLINE
+        return args[0]
+
+    def body_line(self, args):
+        # BODY_LINE NEWLINE
+        return args[0]
+
+    def parse_snippet(self, args):
+        result = {}
+        for a in args:
+            if a:
+                result.update(a)
+        return result
+
+    def parse_ending(self, args):
+        # HEADING3 only
+        return args[0]
+
+    def parse_unparseable(self, args):
+        return {"unparseable": "".join(s for s in args if s)}
+
+    def start(self, args):
+        return args
 
     def parse_unparseable   (self, args):
         # print("parse_unparseable(): "    + str(args[0]), end="\n")
@@ -80,7 +111,7 @@ class MwkTransformer(Transformer):
         return {"body": "".join(args)}
 
     def parse_hashtags(self, args):
-        print("parse_hashtags(): "      + str(args))
+        print("parse_hashtags(): "      + str(args), file=stderr)
         return {"hashtags":args}
         # tags: List[str] = []
         # for d in args:
@@ -102,7 +133,7 @@ class MwkTransformer(Transformer):
         # print("snippet(): body:"             + args[3], end="\n")
         # print("snippet(): datestamp = " + args[4])
         # print("snippet(): " + args[5])
-        print("parse_snippet(): " + str(d))
+        # print("parse_snippet(): " + str(d))
         return d
 
 parser =  Lark(grammar, parser="earley", lexer="dynamic_complete")
@@ -112,7 +143,14 @@ def main():
 
     tree = parser.parse(text)
 
-    result = MwkTransformer().transform(tree)
+    result :Tree = MwkTransformer().transform(tree)
+
+    #print("Final result: " + str(result.pretty()))
+    # result = MwkTransformer().transform(tree)
+
+    json_output = json.dumps(result, indent=2, ensure_ascii=False)
+    print(json_output)
+
 
 if __name__ == '__main__':
     main()
