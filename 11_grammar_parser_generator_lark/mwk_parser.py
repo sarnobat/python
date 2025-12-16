@@ -11,7 +11,7 @@ start: unparseable snippet* unparseable
 
 // we can't %ignore newlines, because we need to preserve the corpus newlines
 
-HEADING3.1: /===[^=\n]*===/
+HEADING3.1:     /===\s[^=\n]*\s*===/
 DATESTAMP:      /[0-9]{4}-[0-9]{2}-[0-9]{2}/
 WHITESPACE:     /\s+/
 BODY:           /(.|\s)+?(?=(=== ===|\d{4}-\d{2}-\d{2}|\Z))/
