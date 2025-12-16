@@ -24,7 +24,7 @@ BODY1: /(?!\d{4}-\d{2}-\d{2})(?!#)(.|\s)+?(?=(===[^\r\n]*===|\#[^\n]*\n|\d{4}-\d
 body: BODY1 -> parse_body
 # body: (BODY_LINE NEWLINE*)+
 hashtags:       HASHTAG*     -> parse_hashtags
-snippet:        HEADING3 NEWLINE* hashtags? body? NEWLINE? DATESTAMP? NEWLINE \
+snippet:        HEADING3 NEWLINE* hashtags? body? NEWLINE DATESTAMP? NEWLINE? \
                                         -> parse_snippet
                 | HEADING3 NEWLINE* body? NEWLINE*         -> parse_ending
 
@@ -73,18 +73,19 @@ class MwkTransformer(Transformer):
         return args
 
 
-    def parse_snippet        (self, args):
+    def parse_snippet        (self, args1):
+        args = [s for s in args1 if s != ""]
 
         for(i, a) in enumerate(args):
             print(f"args[{i}] = {a}")
 
         print("snippet(): heading "     + args[0])
-        print("snippet(): newline "             + args[1], end="")
+        print("snippet():  "             + args[1], end="")
         print("snippet(): hashtag: "             + str(args[2]), end="\n")
-        print("snippet(): body:"             + args[3], end="")
-        print("snippet():   " + args[5])
+        print("snippet(): body:"             + args[3], end="\n")
         print("snippet(): datestamp = " + args[4])
-        return args[0]
+        print("snippet(): " + args[5])
+        return args
 
 parser =  Lark(grammar, parser="earley", lexer="dynamic_complete")
 
