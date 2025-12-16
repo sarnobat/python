@@ -2,7 +2,7 @@
 from lark import Lark, Transformer
 import sys
 
-grammar = """
+grammar = r"""
 start: unparseable snippet* unparseable 
 
 %import common.WS_INLINE
@@ -11,7 +11,7 @@ start: unparseable snippet* unparseable
 
 // we can't %ignore newlines, because we need to preserve the corpus newlines
 
-HEADING3.1:     /=== ===/
+HEADING3.1: /===[^=\n]*===/
 DATESTAMP:      /[0-9]{4}-[0-9]{2}-[0-9]{2}/
 WHITESPACE:     /\s+/
 BODY:           /(.|\s)+?(?=(=== ===|\d{4}-\d{2}-\d{2}|\Z))/
