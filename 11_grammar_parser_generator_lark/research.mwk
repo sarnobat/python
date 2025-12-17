@@ -1,0 +1,163 @@
+﻿== research.2025-12.mwk ==
+
+=== ===
+#research
+
+"Linux customization for ADHD & autism: stim-friendly terminals, wobbly windows, and eye-tracking WMs for better focus. Build your neurodivergent coding ...
+
+2025-12-14
+
+=== ===
+#research
+
+If the part of programming you enjoy most is the physical act of writing code, then agents will feel beside the point. You're already where you want to be, even just with some Copilot or Cursor-style intelligent code auto completion, which makes you faster while still leaving you fully in the driver's seat about the code that gets written.
+
+But if the part you care about is the decision-making around the code, agents feel like they clear space. They take care of the mechanical expression and leave you with judgment, tradeoffs, and intent. Because truly, for someone at my experience level, that is my core value offering anyway. When I spend time actually typing code these days with my own fingers, it feels like a waste of my time.
+- Obie Fernandez, What happens when the coding becomes the least interesting part of the work
+
+2025-12-14
+
+=== ===
+#research
+
+Remove the Incentive. One of the most effective ways of dealing with piracy is by removing the incentive for consumers to look for pirated content.
+
+2025-12-14
+
+=== ===
+#research
+
+In the early days of computing, particularly in the 1970s and 1980s, the battle was not just over programming languages, but over the fundamental architecture of the computer itself.
+
+The Compiler Solution: FP Retreats to Software
+The developers of FP languages (like Lisp, ML, and later Haskell) recognized that they could not beat the efficiency and ubiquity of Intel hardware. Instead, they began investing heavily in sophisticated software-the compiler.
+
+The Functional Programming paradigm, which is mathematically rigorous and highly abstract, is a compiler's dream because:
+
+Purity (No Side Effects): A compiler can rely on the fact that a function's output is only dependent on its input, allowing for extreme levels of aggressive optimization, such as memoization and automatic parallelization.
+
+Referential Transparency: Since expressions can be replaced by their values, the compiler is free to reorder or simplify code without changing its meaning.
+
+In this way, FP won the intellectual war (it has influenced nearly every major language with features like map, filter, and closures), but it lost the hardware war, settling for a position where its principles are enforced and optimized entirely within the software layer.
+
+2025-12-14
+
+=== ===
+#research
+
+Many CS students are taught high level languages, like Python and Java, which hide many details about mechanics of how computers really work. Then, these pupils are asked to understand and implement low-level stuff, which comes with a steep learning curve.
+
+This response resonates with me most. We don't really understand what interpreters do either. I took a compilers course and got more exposed to native development, which opened my eyes to a lot more of how computers work. 
+Java, Python etc are such a thick layer that things like File I/O are just another method call. I guess it's the opposite of a leaky abstraction.
+
+2025-12-14
+
+=== ===
+#research
+
+Correctly speaking, Earth remains in an ice age. Ice still sits thick atop Greenland and Antarctica
+
+Earth is currently in an icehouse period called the Late Cenozoic Ice Age, which started 34 million years ago
+
+2025-12-14
+
+=== ===
+#research
+
+Because C++ is collecting foot guns like trophies, has so many "features" that you need 20 years of experience to parse legacy code and generally produces hard to maintain and hard to debug code. C is in the kernel because it is relatively simple, stable and well maintainable. Rust is in the kernel because of its security guarantees and thorough, well though out design and development cycles. C++ has none of that.
+
+I'd say it's important to remember that the discussion is about kernel-level programming, not programming in general. The C++ abstractions indeed do not make much sense there, because the kernel operates at a lower level of abstraction, and so C is better for them. For application-level programming, you do want the C++ abstractions.
+
+Right tool for the job and all that.
+
+2025-12-14
+
+=== ===
+#research
+
+Because Siberia is a geographic and historic concept and not a political entity, there is no single precise definition of its territorial borders.
+
+2025-12-14
+
+=== ===
+#research
+
+reddit
+decluttering
+spending
+
+what are some products that DON'T solve a problem consumers have?
+
+I'd say about 50% of all products out there don't actually work and only play on peoples emotions and desires to change something unchangeable
+
+2025-12-06
+
+=== ===
+#research
+#milind
+#inferiority
+
+Calamities are of two kinds: misfortunes to ourselves, and good fortune to others.
+
+2025-12-05
+
+=== ===
+#research
+
+Actually, we have a very large population of Italian descent. Until very recently, they could apply for that citizenship if they had a grandparent who had been born in Italy. It changed in the last year or so, which is a shame. I have a big issue with the Spanish government who gives Latinamericans a hard time to get dual citizenship when they came here, took what they needed and never left. Spanish citizenship is only given to those whose parents were born there. All seems legal and fair...until you remember we were part of the empire, and Spaniards were welcome in Argentina until well into the 20th century. Even those like myself who have Spanish origins feel rather bitter about it.
+
+2025-12-04
+
+=== ===
+#research
+
+The language of choice
+I had a short look at the current landscape of programming languages and I had a few criteria in my mind.
+It should...
+... not be a scripting language
+... should not be run by an interpreter
+... should not need a runtime
+... can but does not have to run on ARM CPUs
+... should build native executables on Linux
+... should optionally support a GUI toolkit
+With this criteria, the list shrank quite fast and the well known candidates were C and C++.
+
+GO had just simple and easy to understand code examples on their start page. A simple "Hello World!" and a few more examples. On the other side, the Rust examples on "Get started!" looked somehow too complex with to many special stuff in it.
+
+I also learned when to use methods and when just plain functions. In fact write a method if you modify the state of a struct. If you just use it, keep it as a normal function.
+
+Channels are cool but increase the complexity of the code.
+I can compile the code to a lot of different platforms. Linux, Windows and macOS or even freeBSD are possible.
+I have a native executable that is mostly statically linked.
+
+2025-12-03
+
+=== ===
+#research
+
+a type of engineer, one whose contributions aren't captured by the organization's performance rubric
+
+What you need to know about this person: every team he's ever worked on, he did standout work, in every situation. He got stuff done with high quality, helped others, is not argumentative but is firm in holding up common sense and practicality, and is very curious and humble to top all of this off.
+
+able to identify these talented colleagues as because they worked directly with them. People making hiring decisions don't have that luxury. For promotions, there are organizational constraints that push organizations to define a formal process with explicit criteria.
+For both hiring and promotion, decision-makers have a legibility problem. This problem will inevitability lead to a focus on details that are easier to observe directly precisely because they are easier to observe directly. 
+
+it's unlikely the industry will get much better at identifying and evaluating candidates anytime soon. And so I'm sure we'll continue to see posts about the importance of your LinkedIn profile, or your GitHub, or your passion project. But you neglect at your peril the engineers who are working nine-to-five days at boring companies.
+
+2025-12-03
+
+=== ===
+#research
+#hello
+
+A presigned URL is a temporary, time-limited link that grants anyone who has it permission to perform a specific action, like downloading or uploading, on a private object (e.g., a file in an S3 bucket) without needing AWS credentials. 
+
+2025-12-03
+
+=== hi ===
+#research
+
+2025-12-06
+
+=== ===
+
