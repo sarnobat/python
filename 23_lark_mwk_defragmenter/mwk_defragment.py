@@ -106,7 +106,7 @@ class MwkTransformer(Transformer):
     #     return args.value.strip()
 
     def parse_body(self, args :list[str]):
-        # print("parse_body(): " + str(type(args)), end="")
+        print("parse_body(): " + str(type(args)), end="")
         # args is a list of strings (BODY_LINE and NEWLINE)
         return {"body": "".join(args)}
 
