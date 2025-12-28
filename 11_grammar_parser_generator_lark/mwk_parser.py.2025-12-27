@@ -146,10 +146,10 @@ def main():
     tree = parser.parse(text)
     print("\nTransforming...\n")
 
-<<<<<<< HEAD
-    result = CalcTransformer().transform(tree)
-    print("\nDone.")
-=======
+# <<<<<<< HEAD
+#     result = CalcTransformer().transform(tree)
+#     print("\nDone.")
+# =======
     result :Tree = MwkTransformer().transform(tree)
 
     #print("Final result: " + str(result.pretty()))
@@ -158,7 +158,7 @@ def main():
     json_output = json.dumps(result, indent=2, ensure_ascii=False)
     print(json_output)
 
->>>>>>> e38b43b4f0b6f6c9cc4843a5b458650704f5eafe
+# >>>>>>> e38b43b4f0b6f6c9cc4843a5b458650704f5eafe
 
 if __name__ == '__main__':
     main()
