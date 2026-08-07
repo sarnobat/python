@@ -1,1 +1,1 @@
-/Volumes/git/src.git/2021/python/yed/run.sh
+../src.git/2021/python/yed/run.sh
