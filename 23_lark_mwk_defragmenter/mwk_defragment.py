@@ -106,7 +106,7 @@ class MwkTransformer(Transformer):
     #     return args.value.strip()
 
     def parse_body(self, args :list[str]):
-        # print("parse_body(): " + str(type(args)), end="")
+        print("parse_body(): " + str(type(args)), end="")
         # args is a list of strings (BODY_LINE and NEWLINE)
         return {"body": "".join(args)}
 
@@ -139,9 +139,13 @@ class MwkTransformer(Transformer):
 parser =  Lark(grammar, parser="earley", lexer="dynamic_complete")
 
 def main():
+    print("Reading from stdin...\n")
     text = sys.stdin.read().strip()
+    print("Parsing...\n")
 
     tree = parser.parse(text)
+    print("\nTransforming...\n")
+
 
     result :Tree = MwkTransformer().transform(tree)
 
@@ -150,7 +154,6 @@ def main():
 
     json_output = json.dumps(result, indent=2, ensure_ascii=False)
     print(json_output)
-
 
 if __name__ == '__main__':
     main()
